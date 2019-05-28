@@ -8,8 +8,8 @@
 
       <!-- edesk logo -->
       <div class='sidebar-header'>
-         <img src='{{ asset('storage/images/edesk_logo_white.png') }}' id='edesk-logo'>
-         <img src='{{ asset('storage/images/edesk_e_icon.png') }}' id='edesk-logo-e'>
+         <img src='https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo_white.png' id='edesk-logo'>
+         <img src='https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_e_icon.png' id='edesk-logo-e'>
          <div class='search-site-div'>
             <span class='fa fa-search'></span>
             <input type='text' id='search-site' placeholder='search...'>

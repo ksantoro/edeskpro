@@ -17,7 +17,7 @@ class CreateContactLeadSourcesTable extends Migration
             $table->integer('lead_source_id');
             $table->integer('contact_id');
             $table->timestamps();
-            $table->index(['lead_source_id', 'contact_id']);
+            $table->unique(['lead_source_id', 'contact_id']);
 
             $table->engine    = 'InnoDB';
             $table->charset   = 'utf8';

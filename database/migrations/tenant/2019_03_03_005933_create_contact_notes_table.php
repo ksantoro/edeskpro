@@ -14,12 +14,10 @@ class CreateContactNotesTable extends Migration
     public function up()
     {
         Schema::create('contact_notes', function (Blueprint $table) {
-            $table->unsignedInteger('contact_id');
-            $table->unsignedInteger('note_id');
+            $table->integer('contact_id');
+            $table->integer('note_id');
             $table->timestamps();
-            $table->foreign('contact_id')->references('id')->on('contacts');
-            $table->foreign('note_id')->references('id')->on('notes');
-            $table->index(['contact_id', 'note_id']);
+            $table->unique(['contact_id', 'note_id']);
 
             $table->engine    = 'InnoDB';
             $table->charset   = 'utf8';
@@ -34,8 +32,6 @@ class CreateContactNotesTable extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('contact_notes');
-        Schema::enableForeignKeyConstraints();
     }
 }

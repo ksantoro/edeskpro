@@ -17,11 +17,9 @@ class CreateNotesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('description');
-            $table->unsignedInteger('user_id');
+            $table->integer('user_id');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('user_id')->references('id')->on('edesk.users');
 
             $table->engine    = 'InnoDB';
             $table->charset   = 'utf8';
@@ -36,8 +34,6 @@ class CreateNotesTable extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('notes');
-        Schema::enableForeignKeyConstraints();
     }
 }

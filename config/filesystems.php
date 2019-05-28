@@ -60,8 +60,8 @@ return [
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'bucket' => 'elasticbeanstalk-us-east-2-899413643241',
+            'url' => 'https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/',
         ],
 
     ],
