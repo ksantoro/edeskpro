@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Contacts;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactCreate;
+use App\Models\Main\UserType;
 use App\Models\Tenant\Contact;
 use App\Models\Main\ContactMethodType;
 use App\Models\Main\ContactType;
@@ -11,7 +13,9 @@ use App\Models\Main\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
@@ -176,6 +180,13 @@ class ContactController extends Controller
         $delivery->state                  = $request->delivery_state;
         $delivery->zip                    = $request->delivery_zip;
         $delivery->save();
+
+        // Send Notifications
+        //
+        if ($request->contact_owner_id)
+        {
+            Mail::to(User::find($request->contact_owner_id))->send(new ContactCreate($contact));
+        }
 
         return redirect()->route('contacts.show', [$contact->id]);
     }

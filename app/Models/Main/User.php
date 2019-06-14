@@ -78,7 +78,7 @@ class User extends Authenticatable
     public function contact_owners()
     {
         $database = DB::connection('tenant')->getDatabaseName();
-        return $this->hasMany(Contact::class, "{$database}.contact_owners", 'user_id', 'contact_id');
+        return $this->belongsToMany(Contact::class, "{$database}.contact_owners", 'user_id', 'contact_id');
     }
 
     public function scopeAllUsers($query)

@@ -24,11 +24,10 @@
 </head>
 <body>
 
-   @include('layouts.partials.web.nav')
+    @include('layouts.partials.web.nav')
 
-   @yield('content')
+    @yield('content')
 
-   @include('layouts.partials.footer')
-
+    <script src="{{asset('js/app.js')}}" ></script>
 </body>
 </html>

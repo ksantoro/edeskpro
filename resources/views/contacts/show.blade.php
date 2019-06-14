@@ -19,7 +19,8 @@
                      data-title='Assign Owner to {{ $contact->first_name }} {{ $contact->last_name }}'
                      data-target='#modal_popup'>
                       Assign Owner
-                  </a>
+                  </a> |
+                  <a href='#'>Send Contact</a>
               </p>
           </div>
       </div>

@@ -1,0 +1,154 @@
+/* Top Navigation */
+
+.top-navigation
+{
+    background : #ffffff;
+    height     : 50px;
+    padding    : 10px;
+    position   : fixed;
+    top        : 0;
+    left       : 0;
+    width      : 100%;
+    z-index    : 99;
+}
+
+.top-navigation-nav
+{
+    align-items : center;
+    display     : flex;
+    height      : 100%;
+}
+
+.top-navigation-logo
+{
+    margin-left: 1rem;
+}
+
+.top-navigation-logo a img
+{
+    border          : 0;
+    text-decoration : none;
+    width           : 158px;
+}
+
+.top-navigation-spacer
+{
+    flex : 1;
+}
+
+.top-navigation-items ul
+{
+    list-style : none;
+    margin     : 0;
+    padding    : 0;
+    display    : flex;
+}
+
+.top-navigation-items li
+{
+    padding : 0 1rem;
+}
+
+.drawer-toggle-button
+{
+    background : transparent;
+    border     : none;
+    cursor     : pointer;
+    font-size  : 1.2em;
+}
+
+.drawer-toggle-button:focus
+{
+    outline : none;
+}
+
+.drawer-close-button
+{
+    background : transparent;
+    border     : none;
+    color      : #ffffff;
+    cursor     : pointer;
+    font-size  : 1.2em;
+}
+
+.drawer-toggle-button:focus
+{
+    outline : none;
+}
+
+/* Side Drawer Navigation */
+
+.backdrop
+{
+    background : rgba(0,0,0,0.3);
+    height     : 100%;
+    position   : fixed;
+    top        : 0;
+    left       : 0;
+    width      : 100%;
+    z-index    : 100;
+}
+
+.side-navigation
+{
+    background-color : #36454f;
+    box-shadow       : 1px 0px 7px rgba(0, 0, 0, 0.5);
+    color            : #ffffff;
+    height           : 100%;
+    position         : fixed;
+    left             : 0;
+    top              : 0;
+    transform        : translateX(-100%);
+    transition       : transform 0.3s ease-out;
+    max-width        : 250px;
+    width            : 70%;
+    z-index          : 200;
+}
+
+.side-navigation-open
+{
+    transform : translateX(0);
+}
+
+.side-navigation ul
+{
+    list-style      : none;
+    display         : flex;
+    flex-direction  : column;
+    height          : 100%;
+    justify-content : flex-start;
+}
+
+.side-navigation li
+{
+    margin : 0.5em 0;
+}
+
+.side-navigation a
+{
+    color           : #ffffff;
+    font-size       : 1.1rem;
+    text-decoration : none;
+}
+
+.side-navigation a:hover
+.side-navigation a:active
+{
+    color : #00cccc;
+}
+
+.side-navigation img
+{
+    border          : 0;
+    text-decoration : none;
+    width           : 158px;
+}
+
+@media (max-width: 768px)
+{
+    .top-navigation-items
+    {
+        display : none;
+    }
+}
+
