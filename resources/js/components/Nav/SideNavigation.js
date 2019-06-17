@@ -41,6 +41,11 @@ const SideNavigation = props => {
                         <li><a href='/users'>User Management</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href='/logout'>
+                        <i className='fas fa-sign-out-alt'></i> &nbsp; Logout
+                    </a>
+                </li>
             </ul>
         </nav>
     );

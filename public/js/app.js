@@ -80500,6 +80500,16 @@ var SideNavigation = function SideNavigation(props) {
                         )
                     )
                 )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'li',
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'a',
+                    { href: '/logout' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-sign-out-alt' }),
+                    ' \xA0 Logout'
+                )
             )
         )
     );
