@@ -12,20 +12,34 @@ const SideNavigation = props => {
 
     return (
         <nav className={drawerClasses}>
-            <img src='https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo_white.png'/>
-            <button className='drawer-close-button' onClick={props.close}>
-                <i className='fas fa-chevron-circle-left'></i>
-            </button>
+            <div className='logo-container'>
+                <img src='https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo_white.png'/>
+                <button className='drawer-close-button' onClick={props.close}>
+                    <i className='fas fa-chevron-circle-left'></i>
+                </button>
+            </div>
+
             <br/>
             <ul>
                 <li>
-                    <a href='#'>Dashboard</a>
+                    <a href='/dashboard'><i className="fas fa-tachometer-alt"></i> &nbsp; Dashboard</a>
                 </li>
                 <li>
-                    <a href='#'>Contacts</a>
+                    <i className="fas fa-users"></i> &nbsp;Contacts
+                    <ul>
+                        <li><a href='/leads'>Leads</a></li>
+                        <li><a href='/opportunities'>Opportunities</a></li>
+                        <li><a href='/customers'>Customers</a></li>
+                        <li><a href='/contacts'>Contact Management</a></li>
+                        <li><a href='/archived'>Archive</a></li>
+                    </ul>
                 </li>
                 <li>
-                    <a href='#'>Sales</a>
+                    <i className='fas fa-cogs'></i>&nbsp; Admin
+                    <ul>
+                        <li><a href='/notifications'>Notification Settings</a></li>
+                        <li><a href='/users'>User Management</a></li>
+                    </ul>
                 </li>
             </ul>
         </nav>

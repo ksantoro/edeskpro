@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Notifications;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ContactCreate;
+use App\Mail\NotificationCreate;
+use App\Models\Main\NotificationSendType;
 use App\Models\Main\NotificationType;
 use App\Models\Main\User;
 use App\Models\Tenant\Contact;
 use App\Models\Tenant\NotificationUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class NotificationController extends Controller
 {
@@ -20,8 +26,23 @@ class NotificationController extends Controller
 
     public function index()
     {
+        $display       = [];
+        $notifications = NotificationUser::all()->where('notification_send_type_id', '!=', 1);
+
+        foreach ($notifications as $notification)
+        {
+            $user              = User::find($notification->user_id);
+            $notification_type = NotificationType::find($notification->notification_type_id);
+            $send_type         = NotificationSendType::find($notification->notification_send_type_id);
+            $display[]         = [
+                'user'              => $user,
+                'notification_type' => $notification_type,
+                'send_type'         => $send_type,
+            ];
+        }
+
         return view('notifications.index')
-            ->with('notifications', NotificationUser::all());
+            ->with('notifications', $display);
     }
 
     public function create()
@@ -49,22 +70,31 @@ class NotificationController extends Controller
         //
         foreach ($request->users as $user)
         {
-            $notification_user                            = new NotificationUser();
-            $notification_user->notification_type_id      = $request->notification_type_id;
-            $notification_user->notification_send_type_id = 1; // System
-            $notification_user->user_id                   = $user;
-            $notification_user->save();
+            try
+            {
+                $notification_user                            = new NotificationUser();
+                $notification_user->notification_type_id      = $request->notification_type_id;
+                $notification_user->notification_send_type_id = 1; // System
+                $notification_user->user_id                   = $user;
+                $notification_user->save();
 
-            $notification_user                            = new NotificationUser();
-            $notification_user->notification_type_id      = $request->notification_type_id;
-            $notification_user->notification_send_type_id = 2; // Email
-            $notification_user->user_id                   = $user;
-            $notification_user->save();
+                $notification_user                            = new NotificationUser();
+                $notification_user->notification_type_id      = $request->notification_type_id;
+                $notification_user->notification_send_type_id = 2; // Email
+                $notification_user->user_id                   = $user;
+                $notification_user->save();
+
+                $notification_type = NotificationType::find($notification_user->notification_type_id);
+                $user              = User::find($notification_user->user_id);
+
+                // Send Notifications
+                //
+                Mail::to(Auth::user())->send(new NotificationCreate($notification_type, $user));
+            }
+            catch(\Illuminate\Database\QueryException $e){
+                // Notification Type For User already exists....
+            }
         }
-
-        // Send Notifications
-        //
-        //Mail::to(Auth::user())->send(new ContactCreate($contact));
 
         return redirect()->route('notifications.index');
     }
@@ -83,12 +113,6 @@ class NotificationController extends Controller
         $users = $all_users->whereIn('type_user_id', $types);
 
         return $users;
-    }
-
-    public function send(NotificationType $notification_type)
-    {
-        // Get all users assigned to notification type...
-        // Send the right mailable object...
     }
 
     public function test_email_template()

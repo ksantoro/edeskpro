@@ -43,7 +43,7 @@ class ContactCreate extends Mailable
     {
         return $this->replyTo('info@edesk.pro', 'eDeskPro')
             ->from('info@edesk.pro', 'eDeskPro')
-            ->subject("eDeskPro Notification - New Contact Created ({$this->contact->first_name} {$this->contact->last_name}) for {$this->company->name}")
+            ->subject("eDeskPro Notification - {$this->title} ({$this->contact->first_name} {$this->contact->last_name}) for {$this->company->name}")
             ->text('emails.contacts.create_plain')
             ->view('emails.contacts.create');
     }

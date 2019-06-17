@@ -25,7 +25,7 @@
               <a href='{{ route('contacts.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
           </div>
       </div>
-      <div class='row justify-content-center'>
+      <div class='row'>
          <div class='col-md-12'>
 
              <div class='row'>
@@ -74,8 +74,7 @@
                   @else
 
                      @foreach ($contacts as $contact)
-                        <div class='col-md-4 contact-card'>
-                              <div class='card'>
+                              <div class='card m-2'>
                               <div class='card-header'>
 
                               <div class='row justify-content-end'>
@@ -128,7 +127,6 @@
 
                               </div>
                            </div>
-                        </div>
 
                      @endforeach
 

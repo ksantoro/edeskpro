@@ -68,6 +68,7 @@
     border     : none;
     color      : #ffffff;
     cursor     : pointer;
+    float      : right;
     font-size  : 1.2em;
 }
 
@@ -124,6 +125,11 @@
     margin : 0.5em 0;
 }
 
+.side-navigation ul li ul li a
+{
+    font-size : 0.9em;
+}
+
 .side-navigation a
 {
     color           : #ffffff;
@@ -142,6 +148,11 @@
     border          : 0;
     text-decoration : none;
     width           : 158px;
+}
+
+.side-navigation .logo-container
+{
+    padding : 10px;
 }
 
 @media (max-width: 768px)

@@ -130,7 +130,7 @@ function find_users_by_notification_type()
         $.each(response, function(i, user) {
             $('#notification_user_id')
                 .append($('<option></option>')
-                    .attr('value', i)
+                    .attr('value', user.id)
                     .text(user.first_name + ' ' + user.last_name));
         });
     });

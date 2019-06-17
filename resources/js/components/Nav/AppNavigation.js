@@ -7,6 +7,11 @@ import Backdrop from "./Backdrop";
 class AppNavigation extends Component {
 
     state = {
+        authuser: {
+            "id"    : "",
+            "name"  : "",
+            "email" : ""
+        },
         sideDrawerOpen: false
     };
 
@@ -29,12 +34,12 @@ class AppNavigation extends Component {
         let backdrop;
 
         if (this.state.sideDrawerOpen) {
-            backdrop   = <Backdrop click={this.backdropClickHandler} />;
+            backdrop = <Backdrop click={this.backdropClickHandler} />;
         }
 
         return (
             <React.Fragment>
-                <TopNavigation drawerClickHandler={this.drawerToggleClickHandler} />
+                <TopNavigation drawerClickHandler={this.drawerToggleClickHandler} authuser={this.state.authuser}/>
                 <SideNavigation show={this.state.sideDrawerOpen} close={this.iconCloseClickHander}/>
                 {backdrop}
             </React.Fragment>

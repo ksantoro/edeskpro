@@ -25,6 +25,39 @@
                 <a href='{{ route('notifications.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
             </div>
         </div>
+
+        <div class='row'>
+
+            @isset($notifications)
+
+                @empty($notifications)
+
+                    There are no notifications to display.
+
+                @else
+
+                    @foreach($notifications as $i => $notification_user)
+
+                        <div class='card m-2'>
+                            <div class='card-body'>
+                                <b>Send Type: </b> {{ $notification_user['send_type']->name }}<br>
+                                <b>Notification Type: </b> {{ $notification_user['notification_type']->description }}<br>
+                                <b>User: </b> {{ $notification_user['user']->first_name }} {{ $notification_user['user']->last_name }} ({{ $notification_user['user']->email }})<br>
+                            </div>
+                        </div>
+
+                    @endforeach
+
+                @endempty
+
+            @else
+
+                There are no notifications to display.
+
+            @endisset
+
+        </div>
+
     </div>
 </div>
 @endsection

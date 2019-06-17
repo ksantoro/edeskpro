@@ -79658,6 +79658,11 @@ var AppNavigation = function (_Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = AppNavigation.__proto__ || Object.getPrototypeOf(AppNavigation)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            authuser: {
+                "id": "",
+                "name": "",
+                "email": ""
+            },
             sideDrawerOpen: false
         }, _this.drawerToggleClickHandler = function () {
             _this.setState(function (prevState) {
@@ -79683,7 +79688,7 @@ var AppNavigation = function (_Component) {
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
                 null,
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__TopNavigation__["a" /* default */], { drawerClickHandler: this.drawerToggleClickHandler }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__TopNavigation__["a" /* default */], { drawerClickHandler: this.drawerToggleClickHandler, authuser: this.state.authuser }),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__SideNavigation__["a" /* default */], { show: this.state.sideDrawerOpen, close: this.iconCloseClickHander }),
                 backdrop
             );
@@ -79797,7 +79802,7 @@ exports = module.exports = __webpack_require__(256)(false);
 
 
 // module
-exports.push([module.i, "/* Top Navigation */\n\n.top-navigation\n{\n    background : #ffffff;\n    height     : 50px;\n    padding    : 10px;\n    position   : fixed;\n    top        : 0;\n    left       : 0;\n    width      : 100%;\n    z-index    : 99;\n}\n\n.top-navigation-nav\n{\n    align-items : center;\n    display     : flex;\n    height      : 100%;\n}\n\n.top-navigation-logo\n{\n    margin-left: 1rem;\n}\n\n.top-navigation-logo a img\n{\n    border          : 0;\n    text-decoration : none;\n    width           : 158px;\n}\n\n.top-navigation-spacer\n{\n    flex : 1;\n}\n\n.top-navigation-items ul\n{\n    list-style : none;\n    margin     : 0;\n    padding    : 0;\n    display    : flex;\n}\n\n.top-navigation-items li\n{\n    padding : 0 1rem;\n}\n\n.drawer-toggle-button\n{\n    background : transparent;\n    border     : none;\n    cursor     : pointer;\n    font-size  : 1.2em;\n}\n\n.drawer-toggle-button:focus\n{\n    outline : none;\n}\n\n.drawer-close-button\n{\n    background : transparent;\n    border     : none;\n    color      : #ffffff;\n    cursor     : pointer;\n    font-size  : 1.2em;\n}\n\n.drawer-toggle-button:focus\n{\n    outline : none;\n}\n\n/* Side Drawer Navigation */\n\n.backdrop\n{\n    background : rgba(0,0,0,0.3);\n    height     : 100%;\n    position   : fixed;\n    top        : 0;\n    left       : 0;\n    width      : 100%;\n    z-index    : 100;\n}\n\n.side-navigation\n{\n    background-color : #36454f;\n    box-shadow       : 1px 0px 7px rgba(0, 0, 0, 0.5);\n    color            : #ffffff;\n    height           : 100%;\n    position         : fixed;\n    left             : 0;\n    top              : 0;\n    transform        : translateX(-100%);\n    transition       : transform 0.3s ease-out;\n    max-width        : 250px;\n    width            : 70%;\n    z-index          : 200;\n}\n\n.side-navigation-open\n{\n    transform : translateX(0);\n}\n\n.side-navigation ul\n{\n    list-style      : none;\n    display         : flex;\n    flex-direction  : column;\n    height          : 100%;\n    justify-content : flex-start;\n}\n\n.side-navigation li\n{\n    margin : 0.5em 0;\n}\n\n.side-navigation a\n{\n    color           : #ffffff;\n    font-size       : 1.1rem;\n    text-decoration : none;\n}\n\n.side-navigation a:hover\n.side-navigation a:active\n{\n    color : #00cccc;\n}\n\n.side-navigation img\n{\n    border          : 0;\n    text-decoration : none;\n    width           : 158px;\n}\n\n@media (max-width: 768px)\n{\n    .top-navigation-items\n    {\n        display : none;\n    }\n}\n\n", ""]);
+exports.push([module.i, "/* Top Navigation */\n\n.top-navigation\n{\n    background : #ffffff;\n    height     : 50px;\n    padding    : 10px;\n    position   : fixed;\n    top        : 0;\n    left       : 0;\n    width      : 100%;\n    z-index    : 99;\n}\n\n.top-navigation-nav\n{\n    align-items : center;\n    display     : flex;\n    height      : 100%;\n}\n\n.top-navigation-logo\n{\n    margin-left: 1rem;\n}\n\n.top-navigation-logo a img\n{\n    border          : 0;\n    text-decoration : none;\n    width           : 158px;\n}\n\n.top-navigation-spacer\n{\n    flex : 1;\n}\n\n.top-navigation-items ul\n{\n    list-style : none;\n    margin     : 0;\n    padding    : 0;\n    display    : flex;\n}\n\n.top-navigation-items li\n{\n    padding : 0 1rem;\n}\n\n.drawer-toggle-button\n{\n    background : transparent;\n    border     : none;\n    cursor     : pointer;\n    font-size  : 1.2em;\n}\n\n.drawer-toggle-button:focus\n{\n    outline : none;\n}\n\n.drawer-close-button\n{\n    background : transparent;\n    border     : none;\n    color      : #ffffff;\n    cursor     : pointer;\n    float      : right;\n    font-size  : 1.2em;\n}\n\n.drawer-toggle-button:focus\n{\n    outline : none;\n}\n\n/* Side Drawer Navigation */\n\n.backdrop\n{\n    background : rgba(0,0,0,0.3);\n    height     : 100%;\n    position   : fixed;\n    top        : 0;\n    left       : 0;\n    width      : 100%;\n    z-index    : 100;\n}\n\n.side-navigation\n{\n    background-color : #36454f;\n    box-shadow       : 1px 0px 7px rgba(0, 0, 0, 0.5);\n    color            : #ffffff;\n    height           : 100%;\n    position         : fixed;\n    left             : 0;\n    top              : 0;\n    transform        : translateX(-100%);\n    transition       : transform 0.3s ease-out;\n    max-width        : 250px;\n    width            : 70%;\n    z-index          : 200;\n}\n\n.side-navigation-open\n{\n    transform : translateX(0);\n}\n\n.side-navigation ul\n{\n    list-style      : none;\n    display         : flex;\n    flex-direction  : column;\n    height          : 100%;\n    justify-content : flex-start;\n}\n\n.side-navigation li\n{\n    margin : 0.5em 0;\n}\n\n.side-navigation ul li ul li a\n{\n    font-size : 0.9em;\n}\n\n.side-navigation a\n{\n    color           : #ffffff;\n    font-size       : 1.1rem;\n    text-decoration : none;\n}\n\n.side-navigation a:hover\n.side-navigation a:active\n{\n    color : #00cccc;\n}\n\n.side-navigation img\n{\n    border          : 0;\n    text-decoration : none;\n    width           : 158px;\n}\n\n.side-navigation .logo-container\n{\n    padding : 10px;\n}\n\n@media (max-width: 768px)\n{\n    .top-navigation-items\n    {\n        display : none;\n    }\n}\n\n", ""]);
 
 // exports
 
@@ -80389,11 +80394,15 @@ var SideNavigation = function SideNavigation(props) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'nav',
         { className: drawerClasses },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: 'https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo_white.png' }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'button',
-            { className: 'drawer-close-button', onClick: props.close },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-chevron-circle-left' })
+            'div',
+            { className: 'logo-container' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: 'https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo_white.png' }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'button',
+                { className: 'drawer-close-button', onClick: props.close },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-chevron-circle-left' })
+            )
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -80404,26 +80413,92 @@ var SideNavigation = function SideNavigation(props) {
                 null,
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
-                    { href: '#' },
-                    'Dashboard'
+                    { href: '/dashboard' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-tachometer-alt' }),
+                    ' \xA0 Dashboard'
                 )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'li',
                 null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-users' }),
+                ' \xA0Contacts',
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'a',
-                    { href: '#' },
-                    'Contacts'
+                    'ul',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/leads' },
+                            'Leads'
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/opportunities' },
+                            'Opportunities'
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/customers' },
+                            'Customers'
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/contacts' },
+                            'Contact Management'
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/archived' },
+                            'Archive'
+                        )
+                    )
                 )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'li',
                 null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-cogs' }),
+                '\xA0 Admin',
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'a',
-                    { href: '#' },
-                    'Sales'
+                    'ul',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/notifications' },
+                            'Notification Settings'
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'li',
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'a',
+                            { href: '/users' },
+                            'User Management'
+                        )
+                    )
                 )
             )
         )
