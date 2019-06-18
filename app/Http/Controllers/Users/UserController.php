@@ -37,6 +37,11 @@ class UserController extends Controller
         $this->middleware('tenant');
     }
 
+    public function current_user()
+    {
+        return Auth::user();
+    }
+
     public function index()
     {
         $users           = User::AllUsers()->where('type_user_id', '<>', self::SUPER)->get();

@@ -49,6 +49,7 @@ Route::get('/dashboard', 'Dashboard\DashboardController@index')->name('dashboard
 
 // Users
 //
+Route::get('users/current_user', 'Users\UserController@current_user')->name('users.current_user');
 Route::resource('users', 'Users\UserController');
 Route::get('users/{user}/profile/', 'Users\UserController@profile')->name('users.profile');
 Route::get('users/{user}/settings', 'Users\UserController@settings')->name('users.settings');

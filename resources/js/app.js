@@ -13,6 +13,4 @@ require('./bootstrap');
  */
 
 require('./components/Navigation');
-require('./components/Nav/AppNavigation');
-require('./components/Main');
-require('./components/Home');
+require('./containers/AppNavigation');
