@@ -13,7 +13,7 @@ const TopNavigation = props => (
                     <img src='https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo.png'/>
                 </a>
             </div>
-            <div className='top-navigation-spacer'></div>
+            <div className='top-navigation-spacer'> &nbsp; | {props.authuser.company_name}</div>
             <div className='top-navigation-items'>
                 <ul>
                     <li><a href='#'><i className='fas fa-question-circle' title='Help' data-toggle='tooltip' data-placement='bottom'></i></a></li>

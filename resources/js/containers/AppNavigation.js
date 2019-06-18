@@ -23,19 +23,15 @@ class AppNavigation extends Component {
     fetchAuthUser() {
         axios.get('/users/current_user')
             .then(response => {
-                console.log(response);
-
                 this.setState({
                     authuser: {
-                        id:         response.data.id,
-                        first_name: response.data.first_name,
-                        last_name:  response.data.last_name,
-                        email:      response.data.email,
-                        user_type:  response.data.type_user_id,
-                        company:    {
-                            id:   response.data.company.id,
-                            name: response.data.company.name
-                        }
+                        id:           response.data.id,
+                        first_name:   response.data.first_name,
+                        last_name:    response.data.last_name,
+                        email:        response.data.email,
+                        user_type:    response.data.type_user_id,
+                        company_id:   response.data.company.id,
+                        company_name: response.data.company.name
                     }
                 });
             })
@@ -69,7 +65,7 @@ class AppNavigation extends Component {
         return (
             <React.Fragment>
                 <TopNavigation drawerClickHandler={this.drawerToggleClickHandler} authuser={this.state.authuser}/>
-                <SideNavigation show={this.state.sideDrawerOpen} close={this.iconCloseClickHander}/>
+                <SideNavigation show={this.state.sideDrawerOpen} close={this.iconCloseClickHander} authuser={this.state.authuser}/>
                 {backdrop}
             </React.Fragment>
         );

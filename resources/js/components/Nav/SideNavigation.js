@@ -3,10 +3,33 @@ import './Nav.css';
 
 const SideNavigation = props => {
 
-    let drawerClasses = 'side-navigation';
+    let drawerClasses  = 'side-navigation';
+    let showAdminItems = '';
+    let showSuperItems = '';
 
     if (props.show) {
         drawerClasses = 'side-navigation side-navigation-open';
+    }
+
+    if (props.authuser.user_type <= 2) {
+        showAdminItems =
+            <li>
+                <i className='fas fa-cogs'></i>&nbsp; Admin
+                <ul>
+                    <li><a href='/notifications'>Notification Settings</a></li>
+                    <li><a href='/users'>User Management</a></li>
+                </ul>
+            </li>;
+    }
+
+    if (props.authuser.user_type == 1) {
+        showSuperItems =
+            <li>
+                <i className='fab fa-superpowers'></i> &nbsp; SuperUser
+                <ul>
+                    <li><a href='/companies'>Company Management</a></li>
+                </ul>
+            </li>;
     }
 
     return (
@@ -21,10 +44,10 @@ const SideNavigation = props => {
             <br/>
             <ul>
                 <li>
-                    <a href='/dashboard'><i className="fas fa-tachometer-alt"></i> &nbsp; Dashboard</a>
+                    <a href='/dashboard'><i className='fas fa-tachometer-alt'></i> &nbsp; Dashboard</a>
                 </li>
                 <li>
-                    <i className="fas fa-users"></i> &nbsp;Contacts
+                    <i className='fas fa-users'></i> &nbsp;Contacts
                     <ul>
                         <li><a href='/leads'>Leads</a></li>
                         <li><a href='/opportunities'>Opportunities</a></li>
@@ -33,11 +56,13 @@ const SideNavigation = props => {
                         <li><a href='/archived'>Archive</a></li>
                     </ul>
                 </li>
+                {showAdminItems}
+                {showSuperItems}
                 <li>
-                    <i className='fas fa-cogs'></i>&nbsp; Admin
+                    <i className='fas fa-phone-volume'></i> &nbsp; Contact
                     <ul>
-                        <li><a href='/notifications'>Notification Settings</a></li>
-                        <li><a href='/users'>User Management</a></li>
+                        <li><a href='mailto:info@edesk.pro'>Customer Service</a></li>
+                        <li><a href='mailto:info@edesk.pro'>Technical Support</a></li>
                     </ul>
                 </li>
                 <li>

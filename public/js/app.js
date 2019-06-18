@@ -77899,7 +77899,12 @@ var TopNavigation = function TopNavigation(props) {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: 'https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/images/edesk_logo.png' })
                 )
             ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'top-navigation-spacer' }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'top-navigation-spacer' },
+                ' \xA0 | ',
+                props.authuser.company_name
+            ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'top-navigation-items' },
@@ -78545,9 +78550,64 @@ var DrawerToggleButton = function DrawerToggleButton(props) {
 var SideNavigation = function SideNavigation(props) {
 
     var drawerClasses = 'side-navigation';
+    var showAdminItems = '';
+    var showSuperItems = '';
 
     if (props.show) {
         drawerClasses = 'side-navigation side-navigation-open';
+    }
+
+    if (props.authuser.user_type <= 2) {
+        showAdminItems = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'li',
+            null,
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-cogs' }),
+            '\xA0 Admin',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'ul',
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'li',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'a',
+                        { href: '/notifications' },
+                        'Notification Settings'
+                    )
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'li',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'a',
+                        { href: '/users' },
+                        'User Management'
+                    )
+                )
+            )
+        );
+    }
+
+    if (props.authuser.user_type == 1) {
+        showSuperItems = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'li',
+            null,
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fab fa-superpowers' }),
+            ' \xA0 SuperUser',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'ul',
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'li',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'a',
+                        { href: '/companies' },
+                        'Company Management'
+                    )
+                )
+            )
+        );
     }
 
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -78632,11 +78692,13 @@ var SideNavigation = function SideNavigation(props) {
                     )
                 )
             ),
+            showAdminItems,
+            showSuperItems,
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'li',
                 null,
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-cogs' }),
-                '\xA0 Admin',
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fas fa-phone-volume' }),
+                ' \xA0 Contact',
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'ul',
                     null,
@@ -78645,8 +78707,8 @@ var SideNavigation = function SideNavigation(props) {
                         null,
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'a',
-                            { href: '/notifications' },
-                            'Notification Settings'
+                            { href: 'mailto:info@edesk.pro' },
+                            'Customer Service'
                         )
                     ),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -78654,8 +78716,8 @@ var SideNavigation = function SideNavigation(props) {
                         null,
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'a',
-                            { href: '/users' },
-                            'User Management'
+                            { href: 'mailto:info@edesk.pro' },
+                            'Technical Support'
                         )
                     )
                 )
@@ -81074,8 +81136,6 @@ var AppNavigation = function (_Component) {
             var _this2 = this;
 
             __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get('/users/current_user').then(function (response) {
-                console.log(response);
-
                 _this2.setState({
                     authuser: {
                         id: response.data.id,
@@ -81083,10 +81143,8 @@ var AppNavigation = function (_Component) {
                         last_name: response.data.last_name,
                         email: response.data.email,
                         user_type: response.data.type_user_id,
-                        company: {
-                            id: response.data.company.id,
-                            name: response.data.company.name
-                        }
+                        company_id: response.data.company.id,
+                        company_name: response.data.company.name
                     }
                 });
             }).catch(function (error) {
@@ -81107,7 +81165,7 @@ var AppNavigation = function (_Component) {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
                 null,
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__components_Nav_TopNavigation__["a" /* default */], { drawerClickHandler: this.drawerToggleClickHandler, authuser: this.state.authuser }),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_Nav_SideNavigation__["a" /* default */], { show: this.state.sideDrawerOpen, close: this.iconCloseClickHander }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__components_Nav_SideNavigation__["a" /* default */], { show: this.state.sideDrawerOpen, close: this.iconCloseClickHander, authuser: this.state.authuser }),
                 backdrop
             );
         }
