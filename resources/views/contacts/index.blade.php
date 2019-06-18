@@ -5,11 +5,11 @@
 @section('content')
 <div class='main-section'>
    <div class='container-fluid'>
-      <div class='row'>
-         <div class='col-md-1'>
+      <div class='d-flex flex-row'>
+         <div class='p-2'>
             <a href='{{ route('contacts.create') }}' class='btn btn-primary'>Create New</a>
          </div>
-         <div class='col-md-10'>
+         <div class='p-2 flex-grow-1'>
              <!-- Search box -->
              <form id='search-contacts' action="{{ route('contacts.search') }}" method='POST'>
                  @csrf
@@ -21,7 +21,7 @@
                     </div>
              </form>
          </div>
-          <div class='col-md-1'>
+          <div class='p-2'>
               <a href='{{ route('contacts.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
           </div>
       </div>
@@ -82,26 +82,26 @@
                                     <i class='fas fa-user-circle'></i> &nbsp; {{ $contact->first_name }} {{ $contact->last_name }}
                                  </div>
                                  <div class='col-6 mr-auto'>
-                                    <div class='btn-group btn-group-sm float-right'>
-                                       <button type='button' class='btn btn-info dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                          <i class='fas fa-cog'></i> <span class='caret'></span>
-                                       </button>
-                                       <ul class='dropdown-menu dropdown-menu-right'>
-                                          <li><a href='{{ route('contacts.show', ['contact' => $contact]) }}'><i class='far fa-eye'></i> &nbsp; View Details</a></li>
-                                          <li><a href='{{ route('contacts.edit', ['contact' => $contact]) }}'><i class='fas fa-user-edit'></i> &nbsp; Edit Contact</a></li>
-                                          <li><a href='#'><i class='fas fa-pencil-alt'></i> &nbsp; Assign Owner</a></li>
-                                          <li role='separator' class='dropdown-divider'></li>
-                                          <li>
-                                              <a href='{{ route('contacts.destroy', ['contact' => $contact]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $contact->id }}').submit();">
-                                                  <i class='fas fa-archive'></i> &nbsp; Archive
-                                              </a>
-                                              <form id='archive-form-{{ $contact->id }}' action="{{ route('contacts.destroy', ['contact' => $contact]) }}" method='POST' style='display: none;'>
-                                                  @method('DELETE')
-                                                  @csrf
-                                              </form>
-                                          </li>
-                                       </ul>
-                                    </div>
+                                    {{--action icons (temporary)--}}
+                                     <div class='float-right px-1'>
+                                         <a href='{{ route('contacts.destroy', ['contact' => $contact]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $contact->id }}').submit();">
+                                             <i class='fas fa-archive'  title='Archive Contact' data-toggle='tooltip' data-placement='bottom'></i>
+                                         </a>
+                                         <form id='archive-form-{{ $contact->id }}' action="{{ route('contacts.destroy', ['contact' => $contact]) }}" method='POST' style='display: none;'>
+                                             @method('DELETE')
+                                             @csrf
+                                         </form>
+                                     </div>
+                                     <div class='float-right px-1'>
+                                         <a href='{{ route('contacts.edit', ['contact' => $contact]) }}' class='float-right'>
+                                             <i class='fas fa-user-edit' title='Edit Contact' data-toggle='tooltip' data-placement='bottom'></i>
+                                         </a>
+                                     </div>
+                                     <div class='float-right px-1'>
+                                         <a href='{{ route('contacts.show', ['contact' => $contact]) }}'>
+                                             <i class='far fa-eye' title='View Contact' data-toggle='tooltip' data-placement='bottom'></i>
+                                         </a>
+                                     </div>
                                  </div>
                               </div>
 
@@ -113,14 +113,14 @@
                                        Email: {{ $contact->email }} <br>
                                        Created: {{ $contact->created_at->format('m/d/Y g:i A') }}
                                     </div>
-                                    <div class='col col-1 text-right contact-buttons'>
+                                    <div class='col col-1 float-right contact-buttons'>
                                        <a href='tel:{{ $contact->phone }}' title='Call {{ $contact->first_name }}'>
-                                          <i class='fas fa-phone-square fa-3x'></i>
+                                          <i class='fas fa-phone-square fa-2x px-1'></i>
                                        </a>
                                     </div>
-                                    <div class='col col-1 text-right contact-buttons'>
+                                    <div class='col col-1 float-right contact-buttons'>
                                        <a href='mailto:{{ $contact->email }}' title='Email {{ $contact->first_name }}'>
-                                          <i class='fas fa-envelope-square fa-3x'></i>
+                                          <i class='fas fa-envelope-square fa-2x px-1'></i>
                                        </a>
                                     </div>
                                  </div>
