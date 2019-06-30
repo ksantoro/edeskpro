@@ -114,12 +114,12 @@
                                        Created: {{ $contact->created_at->format('m/d/Y g:i A') }}
                                     </div>
                                     <div class='col col-1 float-right contact-buttons'>
-                                       <a href='tel:{{ $contact->phone }}' title='Call {{ $contact->first_name }}'>
+                                       <a href='tel:{{ $contact->phone }}' title='Call {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'called')">
                                           <i class='fas fa-phone-square fa-2x px-1'></i>
                                        </a>
                                     </div>
                                     <div class='col col-1 float-right contact-buttons'>
-                                       <a href='mailto:{{ $contact->email }}' title='Email {{ $contact->first_name }}'>
+                                       <a href='mailto:{{ $contact->email }}' title='Email {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'emailed')">
                                           <i class='fas fa-envelope-square fa-2x px-1'></i>
                                        </a>
                                     </div>

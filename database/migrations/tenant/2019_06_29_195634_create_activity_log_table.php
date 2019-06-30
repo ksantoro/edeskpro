@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotesTable extends Migration
+class CreateActivityLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('notes', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('activity_log', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->integer('entity_type_id');
             $table->integer('entity_id');
             $table->string('note');
             $table->integer('user_id');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->engine    = 'InnoDB';
             $table->charset   = 'utf8';
@@ -35,6 +34,6 @@ class CreateNotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notes');
+        Schema::dropIfExists('activity_log');
     }
 }

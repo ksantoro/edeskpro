@@ -11,7 +11,7 @@ const SideNavigation = props => {
         drawerClasses = 'side-navigation side-navigation-open';
     }
 
-    if (props.authuser.user_type <= 2) {
+    if (props.authUser.user_type <= 2) {
         showAdminItems =
             <li>
                 <i className='fas fa-cogs'></i>&nbsp; Admin
@@ -22,7 +22,7 @@ const SideNavigation = props => {
             </li>;
     }
 
-    if (props.authuser.user_type == 1) {
+    if (props.authUser.user_type == 1) {
         showSuperItems =
             <li>
                 <i className='fab fa-superpowers'></i> &nbsp; SuperUser

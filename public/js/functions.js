@@ -1,5 +1,5 @@
-$(document).ready(function ()
-{
+$(document).ready(function () {
+
     // Sidebar Navigation
     //
     $('#edesk-logo-e').hide();
@@ -81,7 +81,6 @@ $(document).ready(function ()
     });
 
     $('input.search-contacts').on('keyup', function (e) {
-
         e.preventDefault();
 
         if (e.keyCode == 13) {
@@ -90,7 +89,6 @@ $(document).ready(function ()
     });
 
     $('input.search-users').on('keyup', function (e) {
-
         e.preventDefault();
 
         if (e.keyCode == 13) {
@@ -98,13 +96,34 @@ $(document).ready(function ()
         }
     });
 
-    if ($('#notification_type_id').length)
-    {
+    if ($('#notification_type_id').length) {
         $('#notification_type_id').on('change', function(){
             find_users_by_notification_type();
         });
 
         find_users_by_notification_type();
+    }
+
+    if ($('#copy_to_delivery').length) {
+        $('#copy_to_delivery').on('click', function () {
+            $('select[name="delivery_address_type"]').val($('select[name="billing_address_type"]').val());
+            $('#delivery_street').val($('#billing_street').val());
+            $('#delivery_suite').val($('#billing_suite').val());
+            $('#delivery_city').val($('#billing_city').val());
+            $('#delivery_state').val($('#billing_state').val());
+            $('#delivery_zip').val($('#billing_zip').val());
+        });
+    }
+
+    if ($('#copy_to_billing').length) {
+        $('#copy_to_billing').on('click', function () {
+            $('select[name="billing_address_type"]').val($('select[name="delivery_address_type"]').val());
+            $('#billing_street').val($('#delivery_street').val());
+            $('#billing_suite').val($('#delivery_suite').val());
+            $('#billing_city').val($('#delivery_city').val());
+            $('#billing_state').val($('#delivery_state').val());
+            $('#billing_zip').val($('#delivery_zip').val());
+        });
     }
 });
 
@@ -134,4 +153,25 @@ function find_users_by_notification_type()
                     .text(user.first_name + ' ' + user.last_name));
         });
     });
+}
+
+function log_contact_activity(contact_id, action)
+{
+    if (contact_id > 0) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            method: 'POST',
+            url:    'activity/contact',
+            data: {
+                contact_id : contact_id,
+                note       : 'Contact ' + action
+            }
+        });
+    }
 }

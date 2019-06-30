@@ -30,6 +30,11 @@ class Contact extends TenantModel
       return $this->hasMany(Location::class);
    }
 
+    public function activity_contacts()
+    {
+        return $this->belongsToMany(ActivityLog::class, 'activity_log', 'entity_id');
+    }
+
     public function contact_owners()
     {
         $database = DB::connection('tenant')->getDatabaseName();

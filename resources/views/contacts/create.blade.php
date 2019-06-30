@@ -142,6 +142,8 @@
                      <div class='col'>
                         <!-- Billing -->
                         <h3>Billing</h3><hr>
+                         <button id='copy_to_delivery' type='button' class='btn btn-primary btn-sm float-right'>Copy to Delivery</button>
+                         <div class='clearfix'></div>
                         <div class='form-group'>
                             <label for='billing_address_type'>Type</label><br>
                             <select class='form-control' name='billing_address_type'>
@@ -202,6 +204,8 @@
                      <div class='col'>
                         <!-- Delivery -->
                         <h3>Delivery</h3><hr>
+                         <button id='copy_to_billing' type='button' class='btn btn-primary btn-sm float-right'>Copy to Billing</button>
+                         <div class='clearfix'></div>
                         <div class='form-group'>
                            <label for='delivery_address_type'>Type</label><br>
                             <select class='form-control' name='delivery_address_type'>

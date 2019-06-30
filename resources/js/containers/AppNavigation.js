@@ -2,56 +2,36 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import { bindActionCreators } from 'redux';
 import TopNavigation from '../components/Nav/TopNavigation';
 import SideNavigation from '../components/Nav/SideNavigation';
 import Backdrop from '../components/Nav/Backdrop';
 import store from '../store';
-import {fetchAuthUser} from '../actions/userActions';
+import { fetchAuthUser } from '../actions/authUserActions';
 
 class AppNavigation extends Component {
 
     state = {
-        authuser: {},
+        authUser:       {},
         sideDrawerOpen: false
     };
 
     componentDidMount() {
-        this.fetchAuthUser();
-    }
-
-    fetchAuthUser() {
-        axios.get('/users/current_user')
-            .then(response => {
-                this.setState({
-                    authuser: {
-                        id:           response.data.id,
-                        first_name:   response.data.first_name,
-                        last_name:    response.data.last_name,
-                        email:        response.data.email,
-                        user_type:    response.data.type_user_id,
-                        company_id:   response.data.company.id,
-                        company_name: response.data.company.name
-                    }
-                });
-            })
-            .catch(error => {
-                console.log('Error fetching and parsing data', error);
-            });
+        fetchAuthUser();
     }
 
     drawerToggleClickHandler = () => {
         this.setState((prevState) => {
-            return { sideDrawerOpen: !prevState.sideDrawerOpen }
+            return { sideDrawerOpen: ! prevState.sideDrawerOpen }
         });
     };
 
     backdropClickHandler = () => {
-        this.setState({sideDrawerOpen: false});
+        this.setState({ sideDrawerOpen: false });
     }
 
     iconCloseClickHander = () => {
-        this.setState({sideDrawerOpen: false});
+        this.setState({ sideDrawerOpen: false });
     }
 
     render() {
@@ -64,8 +44,8 @@ class AppNavigation extends Component {
 
         return (
             <React.Fragment>
-                <TopNavigation drawerClickHandler={this.drawerToggleClickHandler} authuser={this.state.authuser}/>
-                <SideNavigation show={this.state.sideDrawerOpen} close={this.iconCloseClickHander} authuser={this.state.authuser}/>
+                <TopNavigation drawerClickHandler={this.drawerToggleClickHandler} authUser={this.state.authUser}/>
+                <SideNavigation show={this.state.sideDrawerOpen} close={this.iconCloseClickHander} authUser={this.state.authUser}/>
                 {backdrop}
             </React.Fragment>
         );
@@ -74,7 +54,7 @@ class AppNavigation extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.authuser
+        authUser: state.authUser
     }
 };
 
@@ -93,5 +73,6 @@ if (document.getElementById('app-navigation')) {
         <Provider store={store}>
             <AppNavigation />
         </Provider>,
-        document.getElementById('app-navigation'));
+        document.getElementById('app-navigation')
+    );
 }

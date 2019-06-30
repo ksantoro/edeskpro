@@ -52,6 +52,7 @@
          </div>
       </div>
 
+       <!-- Address Details -->
        <div class='row mt-3'>
            <div class='col-sm-6'>
                <div class='card'>
@@ -90,6 +91,52 @@
                                </iframe>
                            </div>
                        </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Activity & Notes -->
+       <div class='row mt-3'>
+           <div class='col-sm-6'>
+               <div class='card'>
+                   <div class='card-header'>Notes</div>
+                   <div class='card-body'>
+                       Notes goes here...
+                   </div>
+               </div>
+           </div>
+           <div class='col-sm-6'>
+               <div class='card'>
+                   <div class='card-header'>Activity</div>
+                   <div class='card-body'>
+
+                       @isset($activity)
+
+                           @empty($activity)
+
+                               There is no activity on this contact yet.
+
+                           @else
+
+                               @foreach ($activity as $item)
+                                   <div class='row mt-2 border-bottom'>
+                                       <div class='col col-sm-3 text-left'>
+                                           <small class='font-weight-bold'>{{ $item['ts']->format('m/d/Y g:i A') }}</small>
+                                       </div>
+                                       <div class='col col-sm-3 text-left'>
+                                           <small class='text-uppercase'>{{ $item['user'] }}</small>
+                                       </div>
+                                       <div class='col col-sm-6 text-left'>
+                                           <small>{{ $item['note'] }}</small>
+                                       </div>
+                                   </div>
+                               @endforeach
+
+                           @endempty
+
+                       @endisset
+
                    </div>
                </div>
            </div>

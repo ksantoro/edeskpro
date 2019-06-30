@@ -20,8 +20,14 @@ Route::get('/', function () {
 // Backend Application Routes
 //
 
+// Authentication
+//
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout');
+
+// Activity Logs
+//
+Route::post('activity/contact', 'Activity\ActivityLogController@log_contact_activity')->name('activity.contact');
 
 // Company
 //
