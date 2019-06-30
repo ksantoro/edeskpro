@@ -125,7 +125,53 @@ $(document).ready(function () {
             $('#billing_zip').val($('#delivery_zip').val());
         });
     }
+
+    if ($('#add_contact_note').length) {
+        $('#add_contact_note_form').on('keyup keypress', function(e) {
+            var keyCode = e.keyCode || e.which;
+
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $('#add_contact_note').on('click', function (e) {
+            e.preventDefault();
+
+            var
+                contact_id = $('input[name="contact_id"]').val(),
+                note       = $('input[name="note"]').val();
+
+            add_contact_note(contact_id, note);
+        });
+    }
 });
+
+function add_contact_note(contact_id = 0, note = '')
+{
+    if (contact_id > 0) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            method: 'POST',
+            url:    '/notes',
+            data: {
+                entity_type_id : 3,
+                entity_id      : contact_id,
+                note           : note
+            }
+        }).done(function(response) {
+            console.log(response);
+            location.reload(true);
+        });
+    }
+}
 
 function find_users_by_notification_type()
 {

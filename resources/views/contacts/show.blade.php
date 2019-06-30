@@ -96,17 +96,56 @@
            </div>
        </div>
 
-       <!-- Activity & Notes -->
-       <div class='row mt-3'>
-           <div class='col-sm-6'>
-               <div class='card'>
-                   <div class='card-header'>Notes</div>
-                   <div class='card-body'>
-                       Notes goes here...
-                   </div>
-               </div>
-           </div>
-           <div class='col-sm-6'>
+        <!-- Activity & Notes -->
+        <div class='row mt-3'>
+            <div class='col-sm-6'>
+                <div class='card'>
+                <div class='card-header'>Notes</div>
+                    <div class='card-body'>
+                        <div class='row mt-1'>
+                            <div class='col col-sm-10 text-left'>
+                                <form method='POST' id='add_contact_note_form' name='add_contact_note_form' action='#'>
+                                    {{ csrf_field() }}
+                                    <input type='hidden' name='contact_id' value='{{ $contact->id }}'>
+                                    <div class='form-group'>
+                                        <input type='text' class='form-control' id='note' name='note' placeholder='Add note...'>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class='col col-sm-2 text-right'>
+                                <button type='button' class='btn btn-primary btn-sm' id='add_contact_note'>Add Note</button>
+                            </div>
+                        </div>
+
+                        @isset($notes)
+
+                            @empty($notes)
+
+                                There are no notes for this contact yet.
+
+                            @else
+
+                                @foreach ($notes as $item)
+                                    <div class='row mt-2 border-bottom'>
+                                        <div class='col col-sm-3 text-left'>
+                                            <small class='font-weight-bold'>{{ $item['ts']->format('m/d/Y g:i A') }}</small>
+                                        </div>
+                                        <div class='col col-sm-3 text-left'>
+                                            <small class='text-uppercase'>{{ $item['user'] }}</small>
+                                        </div>
+                                        <div class='col col-sm-6 text-left'>
+                                            <small>{{ $item['note'] }}</small>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            @endempty
+
+                        @endisset
+                    </div>
+                </div>
+            </div>
+            <div class='col-sm-6'>
                <div class='card'>
                    <div class='card-header'>Activity</div>
                    <div class='card-body'>

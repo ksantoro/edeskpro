@@ -43,6 +43,10 @@ Route::get('archived_contacts', 'Contacts\ContactController@archived_contacts')-
 Route::post('contacts/assign',  'Contacts\ContactController@assign')->name('contacts.assign');
 Route::post('contacts/search',  'Contacts\ContactController@search')->name('contacts.search');
 
+// Notes
+//
+Route::resource('notes', 'Notes\NotesController');
+
 // Notifications
 //
 Route::resource('notifications', 'Notifications\NotificationController');

@@ -11,28 +11,23 @@ use Illuminate\Support\Facades\DB;
 
 class Contact extends TenantModel
 {
-   use SoftDeletes;
+    use SoftDeletes;
 
-   protected
-      $fillable = [
-         'contact_type_id',
-         'first_name',
-         'last_name',
-         'title',
-         'phone',
-         'phone_type_id',
-         'email',
-         'email_type_id',
-      ];
+    protected
+        $fillable = [
+            'contact_type_id',
+            'first_name',
+            'last_name',
+            'title',
+            'phone',
+            'phone_type_id',
+            'email',
+            'email_type_id',
+        ];
 
-   public function locations()
-   {
-      return $this->hasMany(Location::class);
-   }
-
-    public function activity_contacts()
+    public function locations()
     {
-        return $this->belongsToMany(ActivityLog::class, 'activity_log', 'entity_id');
+        return $this->hasMany(Location::class);
     }
 
     public function contact_owners()

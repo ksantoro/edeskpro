@@ -2,10 +2,14 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Main\EntityType;
 use App\Models\TenantModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notes extends TenantModel
 {
+    use SoftDeletes;
+
     protected
         $fillable = [
             'entity_type_id',
@@ -15,18 +19,18 @@ class Notes extends TenantModel
             'created_at',
         ];
 
-    public function scopeForContact($query)
+    public function scopeForContacts($query)
     {
         return $query->where('entity_type_id', EntityType::CONTACT);
     }
 
-    public function scopeForUser($query)
+    public function scopeContact($query, Contact $contact)
     {
-        return $query->where('entity_type_id', EntityType::USER);
+        return $query->where('entity_type_id', EntityType::CONTACT)->where('entity_id', $contact->id);
     }
 
-    public function contact_notes()
+    public function scopeForUsers($query)
     {
-        return $this->belongsToMany(Contact::class, 'notes', 'entity_id');
+        return $query->where('entity_type_id', EntityType::USER);
     }
 }

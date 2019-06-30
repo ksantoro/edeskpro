@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Models\Main\EntityType;
-use App\Models\Main\User;
 use App\Models\Tenant\ActivityLog;
 use App\Models\Tenant\Contact;
 use Carbon\Carbon;

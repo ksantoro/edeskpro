@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Mail\ContactCreate;
 use App\Models\Tenant\ActivityLog;
 use App\Models\Tenant\Contact;
+use App\Models\Tenant\Location;
+use App\Models\Tenant\Notes;
 use App\Models\Main\ContactMethodType;
 use App\Models\Main\ContactType;
 use App\Models\Main\EntityType;
-use App\Models\Tenant\Location;
 use App\Models\Main\NotificationSendType;
 use App\Models\Main\NotificationType;
 use App\Models\Tenant\NotificationUser;
@@ -220,6 +221,7 @@ class ContactController extends Controller
     public function show($id)
     {
         $activity = [];
+        $notes    = [];
         $contact  = new Contact;
         $contact  = $contact->find($id);
 
@@ -227,6 +229,17 @@ class ContactController extends Controller
             foreach ($log as $item) {
                 $user       = User::find($item->user_id)->first();
                 $activity[] = [
+                    'note' => $item->note,
+                    'ts'   => $item->created_at,
+                    'user' => "{$user->first_name} {$user->last_name}",
+                ];
+            }
+        }
+
+        if ($contact_notes = Notes::contact($contact)->orderBy('created_at', 'desc')->get()) {
+            foreach ($contact_notes as $item) {
+                $user    = User::find($item->user_id)->first();
+                $notes[] = [
                     'note' => $item->note,
                     'ts'   => $item->created_at,
                     'user' => "{$user->first_name} {$user->last_name}",
@@ -244,6 +257,7 @@ class ContactController extends Controller
             'contact_owners'       => User::AllUsers()->get(),
             'contact_types'        => ContactType::all(),
             'activity'             => $activity,
+            'notes'                => $notes,
         ]);
     }
 

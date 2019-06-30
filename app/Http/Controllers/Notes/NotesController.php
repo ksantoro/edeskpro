@@ -1,12 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Notes;
 
-use App\Notes;
+use App\Http\Controllers\Controller;
+use App\Models\Tenant\Notes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class NotesController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('tenant');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +46,28 @@ class NotesController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug($request);
+        $request->merge(array_map('trim', $request->all()));
+
+        $validator = Validator::make($request->all(), [
+            'entity_type_id' => 'required|numeric|max:25',
+            'entity_id'      => 'required|numeric|max:25',
+            'note'           => 'required|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        // Activity Log
         //
+        $log                 = new Notes();
+        $log->entity_type_id = $request->entity_type_id;
+        $log->entity_id      = $request->entity_id;
+        $log->note           = $request->note;
+        $log->user_id        = Auth::user()->id;
+        $log->created_at     = Carbon::now();
+        $log->save();
     }
 
     /**
