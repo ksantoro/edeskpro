@@ -215,6 +215,17 @@ class ContactController extends Controller
         $log->created_at     = Carbon::now();
         $log->save();
 
+        if ($request->contact_owner_id) {
+            $owner               = User::find($request->contact_owner_id);
+            $log                 = new ActivityLog();
+            $log->entity_type_id = EntityType::CONTACT;
+            $log->entity_id      = $contact->id;
+            $log->note           = "Contact assigned to owner: {$owner->first_name} {$owner->last_name}";
+            $log->user_id        = Auth::user()->id;
+            $log->created_at     = Carbon::now();
+            $log->save();
+        }
+
         return redirect()->route('contacts.show', [$contact->id]);
     }
 
@@ -287,6 +298,7 @@ class ContactController extends Controller
     public function update(Request $request, $id)
     {
         Log::debug($request);
+        $updated = [];
         $request->merge(array_map('trim', $request->all()));
 
         $validator = Validator::make($request->all(), [
@@ -322,7 +334,7 @@ class ContactController extends Controller
         // Contact Basic Info
         //
         $contact                  = Contact::find($id);
-        $contact_old              = $contact;
+        $contact_original         = $contact->getOriginal();
         $contact->contact_type_id = $request->contact_type_id;
         $contact->first_name      = $request->first_name;
         $contact->last_name       = $request->last_name;
@@ -333,16 +345,37 @@ class ContactController extends Controller
         $contact->phone_type_id   = $request->phone_type_id;
         $contact->save();
 
+        if ($changes = $contact->getChanges()) {
+            foreach ($changes as $prop => $new_value) {
+                if ($prop != 'updated_at') {
+                    $updated[] = 'Updated ' . str_replace('_', ' ', $prop) . ' from ' . $contact_original[$prop] . " to {$new_value}";
+                }
+            }
+        }
+
         // Contact Owner
         //
         if ($request->contact_owner_id) {
-           $contact->contact_owners()->detach();
-           $contact->contact_owners()->attach($request->contact_owner_id);
+
+            if ($request->contact_owner_id != $contact->contact_owners()->first()->id) {
+                $owner               = User::find($request->contact_owner_id);
+                $log                 = new ActivityLog();
+                $log->entity_type_id = EntityType::CONTACT;
+                $log->entity_id      = $contact->id;
+                $log->note           = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
+                $log->user_id        = Auth::user()->id;
+                $log->created_at     = Carbon::now();
+                $log->save();
+            }
+
+            $contact->contact_owners()->detach();
+            $contact->contact_owners()->attach($request->contact_owner_id);
         }
 
         // Contact Billing Info
         //
         $billing                         = Location::find($contact->id)->where('is_billing', 1)->first();
+        $billing_original                = $billing->getOriginal();
         $billing->contact_id             = $contact->id;
         $billing->is_billing             = 1;
         $billing->contact_method_type_id = $request->billing_address_type;
@@ -356,6 +389,7 @@ class ContactController extends Controller
         // Contact Delivery Info
         //
         $delivery                         = Location::find($contact->id)->where('is_billing', 0)->first();
+        $delivery_original                = $billing->getOriginal();
         $delivery->contact_id             = $contact->id;
         $delivery->is_billing             = 0;
         $delivery->contact_method_type_id = $request->delivery_address_type;
@@ -366,15 +400,33 @@ class ContactController extends Controller
         $delivery->zip                    = $request->delivery_zip;
         $delivery->save();
 
-        // Activity Log
-        //
-        $log                 = new ActivityLog();
-        $log->entity_type_id = EntityType::CONTACT;
-        $log->entity_id      = $contact->id;
-        $log->note           = 'Contact updated in the system';
-        $log->user_id        = Auth::user()->id;
-        $log->created_at     = Carbon::now();
-        $log->save();
+        if ($changes = $billing->getChanges()) {
+            foreach ($changes as $prop => $new_value) {
+                if ($prop != 'updated_at') {
+                    $updated[] = 'Updated ' . str_replace('_', ' ', $prop) . ' from ' . $billing_original[$prop] . " to {$new_value}";
+                }
+            }
+        }
+
+        if ($changes = $delivery->getChanges()) {
+            foreach ($changes as $prop => $new_value) {
+                if ($prop != 'updated_at') {
+                    $updated[] = 'Updated ' . str_replace('_', ' ', $prop) . ' from ' . $delivery_original[$prop] . " to {$new_value}";
+                }
+            }
+        }
+
+        if (! empty($updated)) {
+            foreach ($updated as $note) {
+                $log                 = new ActivityLog();
+                $log->entity_type_id = EntityType::CONTACT;
+                $log->entity_id      = $contact->id;
+                $log->note           = $note;
+                $log->user_id        = Auth::user()->id;
+                $log->created_at     = Carbon::now();
+                $log->save();
+            }
+        }
 
        return redirect()->route('contacts.show', [$contact->id]);
     }
