@@ -4,12 +4,9 @@ namespace App\Models\Tenant;
 
 use App\Models\Main\EntityType;
 use App\Models\TenantModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ActivityLog extends TenantModel
 {
-    use SoftDeletes;
-
     protected
         $table    = 'activity_log',
         $fillable = [

@@ -6,7 +6,7 @@
     <div class='text-center'>
         <div class='content'>
             <div class='title m-b-md'>
-                <img src='<?php echo asset('storage/images/edesk_logo.png');?>'>
+                <img src='https://elasticbeanstalk-us-east-2-899413643241.s3.us-east-2.amazonaws.com/resources/images/edesk_logo.png'>
             </div>
         </div>
     </div>
