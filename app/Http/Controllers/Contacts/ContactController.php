@@ -227,7 +227,7 @@ class ContactController extends Controller
 
         if ($log = ActivityLog::contact($contact)->orderBy('created_at', 'desc')->get()) {
             foreach ($log as $item) {
-                $user       = User::find($item->user_id)->first();
+                $user       = User::find($item->user_id);
                 $activity[] = [
                     'note' => $item->note,
                     'ts'   => $item->created_at,
@@ -238,7 +238,7 @@ class ContactController extends Controller
 
         if ($contact_notes = Notes::contact($contact)->orderBy('created_at', 'desc')->get()) {
             foreach ($contact_notes as $item) {
-                $user    = User::find($item->user_id)->first();
+                $user    = User::find($item->user_id);
                 $notes[] = [
                     'note' => $item->note,
                     'ts'   => $item->created_at,
