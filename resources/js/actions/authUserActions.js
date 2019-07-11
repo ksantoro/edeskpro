@@ -1,27 +1,27 @@
 import axios from 'axios';
+import { FETCH_AUTH_USER } from './types';
 
-export const fetchAuthUser = () => {
+export const fetchAuthUser = () => async( dispatch ) => {
 
-    let authUser;
+    try {
+        const authUserResponse = await axios.get( '/users/current_user' );
+        const authUserData     = authUserResponse.data;
+        const payload          = {
+            id:           authUserData.id,
+            first_name:   authUserData.first_name,
+            last_name:    authUserData.last_name,
+            email:        authUserData.email,
+            user_type:    authUserData.type_user_id,
+            company_id:   authUserData.company.id,
+            company_name: authUserData.company.name
+        }
 
-    axios.get('/users/current_user')
-        .then(response => {
-            authUser = {
-                id:           response.data.id,
-                first_name:   response.data.first_name,
-                last_name:    response.data.last_name,
-                email:        response.data.email,
-                user_type:    response.data.type_user_id,
-                company_id:   response.data.company.id,
-                company_name: response.data.company.name
-            }
-        })
-        .catch(error => {
-            console.log('Error fetching and parsing data', error);
-        });
+        dispatch( {
+            type:    FETCH_AUTH_USER,
+            payload: payload,
+        } )
 
-    return {
-        type:   'FETCH_AUTH_USER',
-        payload: authUser
-    };
+    } catch ( error ) {
+        console.log('Error fetching and parsing authUser data', error);
+    }
 }

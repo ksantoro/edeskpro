@@ -74,59 +74,57 @@
                   @else
 
                      @foreach ($contacts as $contact)
-                              <div class='card m-2'>
-                              <div class='card-header'>
-
-                              <div class='row justify-content-end'>
-                                 <div class='col-6 ml-auto'>
-                                    <i class='fas fa-user-circle'></i> &nbsp; {{ $contact->first_name }} {{ $contact->last_name }}
-                                 </div>
-                                 <div class='col-6 mr-auto'>
-                                    {{--action icons (temporary)--}}
-                                     <div class='float-right px-1'>
-                                         <a href='{{ route('contacts.destroy', ['contact' => $contact]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $contact->id }}').submit();">
-                                             <i class='fas fa-archive'  title='Archive Contact' data-toggle='tooltip' data-placement='bottom'></i>
-                                         </a>
-                                         <form id='archive-form-{{ $contact->id }}' action="{{ route('contacts.destroy', ['contact' => $contact]) }}" method='POST' style='display: none;'>
-                                             @method('DELETE')
-                                             @csrf
-                                         </form>
-                                     </div>
-                                     <div class='float-right px-1'>
-                                         <a href='{{ route('contacts.edit', ['contact' => $contact]) }}' class='float-right'>
-                                             <i class='fas fa-user-edit' title='Edit Contact' data-toggle='tooltip' data-placement='bottom'></i>
-                                         </a>
-                                     </div>
-                                     <div class='float-right px-1'>
-                                         <a href='{{ route('contacts.show', ['contact' => $contact]) }}'>
-                                             <i class='far fa-eye' title='View Contact' data-toggle='tooltip' data-placement='bottom'></i>
-                                         </a>
-                                     </div>
-                                 </div>
-                              </div>
-
-                              </div>
-                              <div class='card-body'>
-                                 <div class='row'>
+                        <div class='card m-2' style='max-width:25rem;'>
+                            <div class='card-header'>
+                                <div class='row justify-content-end'>
+                                    <div class='col-8 ml-auto'>
+                                        <i class='fas fa-user-circle'></i> &nbsp; {{ $contact->first_name }} {{ $contact->last_name }}
+                                    </div>
+                                    <div class='col-4 mr-auto'>
+                                        {{--action icons (temporary)--}}
+                                        <div class='float-right px-1'>
+                                            <a href='{{ route('contacts.destroy', ['contact' => $contact]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $contact->id }}').submit();">
+                                            <i class='fas fa-archive'  title='Archive Contact' data-toggle='tooltip' data-placement='bottom'></i>
+                                            </a>
+                                            <form id='archive-form-{{ $contact->id }}' action="{{ route('contacts.destroy', ['contact' => $contact]) }}" method='POST' style='display: none;'>
+                                            @method('DELETE')
+                                            @csrf
+                                            </form>
+                                        </div>
+                                        <div class='float-right px-1'>
+                                            <a href='{{ route('contacts.edit', ['contact' => $contact]) }}' class='float-right'>
+                                                <i class='fas fa-user-edit' title='Edit Contact' data-toggle='tooltip' data-placement='bottom'></i>
+                                            </a>
+                                        </div>
+                                        <div class='float-right px-1'>
+                                            <a href='{{ route('contacts.show', ['contact' => $contact]) }}'>
+                                                <i class='far fa-eye' title='View Contact' data-toggle='tooltip' data-placement='bottom'></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='card-body'>
+                                <div class='row'>
                                     <div class='col col-9'>
-                                       Name: {{ $contact->first_name }} {{ $contact->last_name }} <br>
-                                       Email: {{ $contact->email }} <br>
-                                       Created: {{ $contact->created_at->format('m/d/Y g:i A') }}
+                                        Name: {{ $contact->first_name }} {{ $contact->last_name }} <br>
+                                        Email: {{ $contact->email }} <br>
+                                        Created: {{ $contact->created_at->format('m/d/Y g:i A') }}
                                     </div>
                                     <div class='col col-1 float-right contact-buttons'>
-                                       <a href='tel:{{ $contact->phone }}' title='Call {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'called')">
-                                          <i class='fas fa-phone-square fa-2x px-1'></i>
-                                       </a>
+                                        <a href='tel:{{ $contact->phone }}' title='Call {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'called')">
+                                            <i class='fas fa-phone-square fa-2x px-1'></i>
+                                        </a>
                                     </div>
                                     <div class='col col-1 float-right contact-buttons'>
-                                       <a href='mailto:{{ $contact->email }}' title='Email {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'emailed')">
-                                          <i class='fas fa-envelope-square fa-2x px-1'></i>
-                                       </a>
+                                        <a href='mailto:{{ $contact->email }}' title='Email {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'emailed')">
+                                            <i class='fas fa-envelope-square fa-2x px-1'></i>
+                                        </a>
                                     </div>
-                                 </div>
+                                </div>
 
-                              </div>
-                           </div>
+                            </div>
+                        </div>
 
                      @endforeach
 

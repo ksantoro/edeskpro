@@ -1,13 +1,16 @@
-const authUserReducer = (state = {}, action) => {
-    switch (action.type) {
-        case 'FETCH_AUTH_USER' :
-            state = {
+import { FETCH_AUTH_USER } from '../actions/types';
+
+const authUserReducer = ( state = {}, action ) => {
+    switch ( action.type ) {
+        case FETCH_AUTH_USER :
+            return {
                 ...state,
                 authUser : action.payload
             }
-            break;
+        break;
+        default:
+            return state;
     }
-    return state;
 };
 
 export default authUserReducer;
