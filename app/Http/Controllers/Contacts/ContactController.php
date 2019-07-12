@@ -403,7 +403,7 @@ class ContactController extends Controller
         if ($changes = $billing->getChanges()) {
             foreach ($changes as $prop => $new_value) {
                 if ($prop != 'updated_at') {
-                    $updated[] = 'Updated ' . str_replace('_', ' ', $prop) . ' from ' . $billing_original[$prop] . " to {$new_value}";
+                    $updated[] = 'Updated billing ' . str_replace('_', ' ', $prop) . ' from ' . $billing_original[$prop] . " to {$new_value}";
                 }
             }
         }
@@ -411,7 +411,7 @@ class ContactController extends Controller
         if ($changes = $delivery->getChanges()) {
             foreach ($changes as $prop => $new_value) {
                 if ($prop != 'updated_at') {
-                    $updated[] = 'Updated ' . str_replace('_', ' ', $prop) . ' from ' . $delivery_original[$prop] . " to {$new_value}";
+                    $updated[] = 'Updated delivery ' . str_replace('_', ' ', $prop) . ' from ' . $delivery_original[$prop] . " to {$new_value}";
                 }
             }
         }

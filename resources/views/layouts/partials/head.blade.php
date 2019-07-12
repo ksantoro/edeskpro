@@ -1,6 +1,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel='icon'
+      type='image/png'
+      href='https://elasticbeanstalk-us-east-2-899413643241.s3.us-east-2.amazonaws.com/resources/images/edesk_e.png' />
 
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
