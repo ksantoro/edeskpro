@@ -1,19 +1,15 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import authUserReducer from './reducers/authUserReducer';
-import userReducer from './reducers/userReducer';
+import rootReducer from './reducers/rootReducer';
 
-const initialState = {};
-const middleware   = [thunk];
-const store        = createStore(
-    combineReducers({
-        authUserReducer,
-        userReducer
-    }),
+const initialState     = {};
+const middleware       = [thunk];
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store            = createStore(
+    rootReducer,
     initialState,
-    compose(
-        applyMiddleware(...middleware),
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    composeEnhancers(
+        applyMiddleware( ...middleware ),
     )
 );
 

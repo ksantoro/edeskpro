@@ -81271,19 +81271,15 @@ var Backdrop = function Backdrop(props) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux_thunk__ = __webpack_require__(289);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reducers_authUserReducer__ = __webpack_require__(290);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__reducers_userReducer__ = __webpack_require__(291);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reducers_rootReducer__ = __webpack_require__(300);
 
 
 
 
 var initialState = {};
 var middleware = [__WEBPACK_IMPORTED_MODULE_1_redux_thunk__["a" /* default */]];
-var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["e" /* createStore */])(Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* combineReducers */])({
-    authUserReducer: __WEBPACK_IMPORTED_MODULE_2__reducers_authUserReducer__["a" /* default */],
-    userReducer: __WEBPACK_IMPORTED_MODULE_3__reducers_userReducer__["a" /* default */]
-}), initialState, Object(__WEBPACK_IMPORTED_MODULE_0_redux__["d" /* compose */])(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */].apply(undefined, middleware), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+var composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || __WEBPACK_IMPORTED_MODULE_0_redux__["d" /* compose */];
+var store = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["e" /* createStore */])(__WEBPACK_IMPORTED_MODULE_2__reducers_rootReducer__["a" /* default */], initialState, composeEnhancers(__WEBPACK_IMPORTED_MODULE_0_redux__["a" /* applyMiddleware */].apply(undefined, middleware)));
 
 /* harmony default export */ __webpack_exports__["a"] = (store);
 
@@ -82223,6 +82219,25 @@ if (hadRuntime) {
   (function() { return this })() || Function("return this")()
 );
 
+
+/***/ }),
+/* 300 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redux__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__authUserReducer__ = __webpack_require__(290);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__userReducer__ = __webpack_require__(291);
+
+
+
+
+var rootReducer = Object(__WEBPACK_IMPORTED_MODULE_0_redux__["c" /* combineReducers */])({
+    authUserReducer: __WEBPACK_IMPORTED_MODULE_1__authUserReducer__["a" /* default */],
+    userReducer: __WEBPACK_IMPORTED_MODULE_2__userReducer__["a" /* default */]
+});
+
+/* harmony default export */ __webpack_exports__["a"] = (rootReducer);
 
 /***/ })
 /******/ ]);
