@@ -262,8 +262,8 @@ class ContactController extends Controller
             'contact'              => $contact,
             'contact_owner'        => $contact->contact_owners()->first(),
             'contact_type'         => ContactType::find($contact->contact_type_id),
-            'billing'              => Contact::find($contact->id)->locations()->where('is_billing', 1)->first(),
-            'delivery'             => Contact::find($contact->id)->locations()->where('is_billing', 0)->first(),
+            'billing'              => Location::forContact($contact)->isBilling()->first(),
+            'delivery'             => Location::forContact($contact)->isDelivery()->first(),
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
             'contact_types'        => ContactType::all(),
@@ -280,8 +280,8 @@ class ContactController extends Controller
         return view('contacts.edit', [
             'contact'              => $contact,
             'contact_owner'        => $contact->contact_owners()->first(),
-            'billing'              => Contact::find($contact->id)->locations()->where('is_billing', 1)->first(),
-            'delivery'             => Contact::find($contact->id)->locations()->where('is_billing', 0)->first(),
+            'billing'              => Location::forContact($contact)->isBilling()->first(),
+            'delivery'             => Location::forContact($contact)->isDelivery()->first(),
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
             'contact_types'        => ContactType::all()
@@ -366,15 +366,15 @@ class ContactController extends Controller
                 $log->user_id        = Auth::user()->id;
                 $log->created_at     = Carbon::now();
                 $log->save();
-            }
 
-            $contact->contact_owners()->detach();
-            $contact->contact_owners()->attach($request->contact_owner_id);
+                $contact->contact_owners()->detach();
+                $contact->contact_owners()->attach($request->contact_owner_id);
+            }
         }
 
         // Contact Billing Info
         //
-        $billing                         = Location::find($contact->id)->where('is_billing', 1)->first();
+        $billing                         = Location::forContact($contact)->isBilling()->first();
         $billing_original                = $billing->getOriginal();
         $billing->contact_id             = $contact->id;
         $billing->is_billing             = 1;
@@ -388,7 +388,7 @@ class ContactController extends Controller
 
         // Contact Delivery Info
         //
-        $delivery                         = Location::find($contact->id)->where('is_billing', 0)->first();
+        $delivery                         = Location::forContact($contact)->IsDelivery()->first();
         $delivery_original                = $billing->getOriginal();
         $delivery->contact_id             = $contact->id;
         $delivery->is_billing             = 0;

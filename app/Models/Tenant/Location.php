@@ -24,7 +24,17 @@ class Location extends TenantModel
 
    public function scopeForContact($query, $contact)
    {
-      return $query->whereContact($contact);
+      return $query->where('contact_id', $contact->id);
+   }
+
+   public function scopeIsBilling($query)
+   {
+       return $query->where('is_billing', 1);
+   }
+
+   public function scopeIsDelivery($query)
+   {
+       return $query->where('is_billing', 0);
    }
 
    public function contact()
