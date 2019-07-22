@@ -46,7 +46,7 @@
                          Unassigned
                      @endif
                   <br>
-                   <b>Owner:</b>
+                   <b>Contact Source:</b>
                    @if (isset($contact_source))
                        {{ $contact_source->name }} - {{ $contact_source->description }}
                    @else
