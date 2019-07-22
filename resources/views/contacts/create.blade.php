@@ -14,19 +14,39 @@
                      {{ csrf_field() }}
                      <div class='row form-row'>
                         <div class='col'>
-                            <div class='form-group'>
-                                <label for='contact_owner_id'>Contact Owner</label><br>
-                                <select class='form-control' name='contact_owner_id'>
-                                    <option value=''>Unassigned</option>
-                                    @if (isset($contact_owners))
-                                        @foreach ($contact_owners as $owner)
-                                            <option value='{{ $owner->id }}'>{{ $owner->first_name }} {{ $owner->last_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @if ($errors->has('contact_owner_id'))
-                                    <div class='alert alert-danger mt-1'>{{ $errors->first('contact_owner_id') }}</div>
-                                @endif
+                            <div class='row form-row'>
+                                <div class='col'>
+                                    <div class='form-group'>
+                                        <label for='contact_owner_id'>Contact Owner</label><br>
+                                        <select class='form-control' name='contact_owner_id'>
+                                            <option value=''>Unassigned</option>
+                                            @if (isset($contact_owners))
+                                                @foreach ($contact_owners as $owner)
+                                                    <option value='{{ $owner->id }}'>{{ $owner->first_name }} {{ $owner->last_name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('contact_owner_id'))
+                                            <div class='alert alert-danger mt-1'>{{ $errors->first('contact_owner_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class='col'>
+                                    <div class='form-group'>
+                                        <label for='contact_source'>Contact Source</label><br>
+                                        <select class='form-control' name='contact_source'>
+                                            <option value=''>Unknown</option>
+                                            @if (isset($contact_sources))
+                                                @foreach ($contact_sources as $source)
+                                                    <option value='{{ $source->id }}'>{{ $source->name }} - {{ $source->description }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('contact_source'))
+                                            <div class='alert alert-danger mt-1'>{{ $errors->first('contact_source') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class='col'>

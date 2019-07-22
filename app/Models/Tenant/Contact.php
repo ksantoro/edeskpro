@@ -43,7 +43,8 @@ class Contact extends TenantModel
 
     public function lead_source()
     {
-        return $this->belongsTo(LeadSource::class);
+        $database = DB::connection('tenant')->getDatabaseName();
+        return $this->belongsToMany(LeadSource::class, "{$database}.contact_lead_sources", 'contact_id', 'lead_source_id');
     }
 
     public function setConnection($name)

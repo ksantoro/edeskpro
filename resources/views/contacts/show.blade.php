@@ -46,6 +46,13 @@
                          Unassigned
                      @endif
                   <br>
+                   <b>Owner:</b>
+                   @if (isset($contact_source))
+                       {{ $contact_source->name }} - {{ $contact_source->description }}
+                   @else
+                       Unknown
+                   @endif
+                   <br>
                   <b>Contact Type:</b> {{ $contact_type->name }}
                </div>
             </div>

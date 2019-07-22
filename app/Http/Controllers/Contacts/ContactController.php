@@ -11,6 +11,7 @@ use App\Models\Tenant\Notes;
 use App\Models\Main\ContactMethodType;
 use App\Models\Main\ContactType;
 use App\Models\Main\EntityType;
+use App\Models\Main\LeadSource;
 use App\Models\Main\NotificationSendType;
 use App\Models\Main\NotificationType;
 use App\Models\Tenant\NotificationUser;
@@ -93,7 +94,7 @@ class ContactController extends Controller
 
     public function archived_contacts()
     {
-        $contacts = Contact::whereNotNull('deleted_at');
+        $contacts = Contact::all()->where('deleted_at', '!=', 'null');
         return view('contacts.index')->with('contacts', $contacts)->with('counts', $this->contact_counts());
     }
 
@@ -102,6 +103,7 @@ class ContactController extends Controller
         return view('contacts.create', [
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
+            'contact_sources'      => LeadSource::all(),
             'contact_types'        => ContactType::all()
         ]);
     }
@@ -116,6 +118,7 @@ class ContactController extends Controller
             'last_name'             => 'required|max:255',
             'title'                 => 'nullable|max:255',
             'contact_owner_id'      => 'nullable|numeric|max:25',
+            'contact_source'        => 'nullable|numeric|max:25',
             'contact_type_id'       => 'required|numeric|max:25',
             'email'                 => 'required|email|unique:tenant.contacts',
             'email_type_id'         => 'required|numeric|max:25',
@@ -158,6 +161,12 @@ class ContactController extends Controller
         //
         if ($request->contact_owner_id) {
            $contact->contact_owners()->attach($request->contact_owner_id);
+        }
+
+        // Contact Source
+        //
+        if ($request->contact_source) {
+            $contact->lead_source()->attach($request->contact_source);
         }
 
         // Contact Billing Info
@@ -261,11 +270,13 @@ class ContactController extends Controller
         return view('contacts.show', [
             'contact'              => $contact,
             'contact_owner'        => $contact->contact_owners()->first(),
+            'contact_source'       => $contact->lead_source()->first(),
             'contact_type'         => ContactType::find($contact->contact_type_id),
             'billing'              => Location::forContact($contact)->isBilling()->first(),
             'delivery'             => Location::forContact($contact)->isDelivery()->first(),
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
+            'contact_sources'      => LeadSource::all(),
             'contact_types'        => ContactType::all(),
             'activity'             => $activity,
             'notes'                => $notes,
@@ -280,10 +291,12 @@ class ContactController extends Controller
         return view('contacts.edit', [
             'contact'              => $contact,
             'contact_owner'        => $contact->contact_owners()->first(),
+            'contact_source'       => $contact->lead_source()->first(),
             'billing'              => Location::forContact($contact)->isBilling()->first(),
             'delivery'             => Location::forContact($contact)->isDelivery()->first(),
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
+            'contact_sources'      => LeadSource::all(),
             'contact_types'        => ContactType::all()
         ]);
     }
@@ -306,6 +319,7 @@ class ContactController extends Controller
             'last_name'             => 'required|max:255',
             'title'                 => 'nullable|max:255',
             'contact_owner_id'      => 'nullable|numeric|max:25',
+            'contact_source'        => 'nullable|numeric|max:25',
             'contact_type_id'       => 'required|numeric|max:25',
             'email'                 => 'required|email|max:255',
             'email_type_id'         => 'required|numeric|max:25',
@@ -356,19 +370,48 @@ class ContactController extends Controller
         // Contact Owner
         //
         if ($request->contact_owner_id) {
+            if ($contact->contact_owners()->first()) {
+                if ($request->contact_owner_id != $contact->contact_owners()->first()->id) {
+                    $owner               = User::find($request->contact_owner_id);
+                    $log                 = new ActivityLog();
+                    $log->entity_type_id = EntityType::CONTACT;
+                    $log->entity_id      = $contact->id;
+                    $log->note           = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
+                    $log->user_id        = Auth::user()->id;
+                    $log->created_at     = Carbon::now();
+                    $log->save();
 
-            if ($request->contact_owner_id != $contact->contact_owners()->first()->id) {
-                $owner               = User::find($request->contact_owner_id);
-                $log                 = new ActivityLog();
-                $log->entity_type_id = EntityType::CONTACT;
-                $log->entity_id      = $contact->id;
-                $log->note           = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
-                $log->user_id        = Auth::user()->id;
-                $log->created_at     = Carbon::now();
-                $log->save();
-
-                $contact->contact_owners()->detach();
+                    $contact->contact_owners()->detach();
+                    $contact->contact_owners()->attach($request->contact_owner_id);
+                }
+            }
+            else {
                 $contact->contact_owners()->attach($request->contact_owner_id);
+            }
+        }
+
+        // Contact Source
+        //
+        if ($request->contact_source) {
+            if ($contact->lead_source()->first()) {
+                $source = LeadSource::find($contact->lead_source()->first()->id);
+
+                if ($request->contact_source != $source->id) {
+                    $new_source          = LeadSource::find($request->contact_source);
+                    $log                 = new ActivityLog();
+                    $log->entity_type_id = EntityType::CONTACT;
+                    $log->entity_id      = $contact->id;
+                    $log->note           = "Contact source changed from [{$source->name} {$source->description}] to [{$new_source->name} {$new_source->description}]";
+                    $log->user_id        = Auth::user()->id;
+                    $log->created_at     = Carbon::now();
+                    $log->save();
+
+                    $contact->lead_source()->detach();
+                    $contact->lead_source()->attach($request->contact_source);
+                }
+            }
+            else {
+                $contact->lead_source()->attach($request->contact_source);
             }
         }
 
