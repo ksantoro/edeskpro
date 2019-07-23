@@ -14,13 +14,12 @@
           <div class='col-sm-4'>
               <p class='float-right'>
                   <a href='{{ route('contacts.edit', ['contact' => $contact]) }}'>Edit</a> |
-                  <a href='' data-toggle='modal'
+                  <a href='#' data-toggle='modal'
                      data-id='{{ $contact->id }}'
                      data-title='Assign Owner to {{ $contact->first_name }} {{ $contact->last_name }}'
-                     data-target='#modal_popup'>
+                     data-target='#assign_contact_modal_popup'>
                       Assign Owner
-                  </a> |
-                  <a href='#'>Send Contact</a>
+                  </a>
               </p>
           </div>
       </div>
@@ -191,44 +190,45 @@
 </div>
 
 <!-- Modal -->
-<div class='modal fade' id='modal_popup' tabindex='-1' role='dialog' aria-labelledby='modal_popup' aria-hidden='true'>
+<div class='modal fade' id='assign_contact_modal_popup' tabindex='-1' role='dialog' aria-labelledby='assign_contact_modal_popup' aria-hidden='true'>
     <div class='modal-dialog modal-dialog-centered' role='document'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h5 class='modal-title' id='modal_popup_title'></h5>
+                <h5 class='modal-title' id='assign_contact_modal_popup_title'></h5>
                 <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
                     <span aria-hidden='true'>&times;</span>
                 </button>
             </div>
             <div class='modal-body'>
-                <form>
-
-
-                </form>
-                <div class='form-group'>
-                    <label for='contact_owner_id'>Contact Owner</label><br>
-                    <select class='form-control' name='contact_owner_id'>
-                        <option value=''>Unassigned</option>
-                        @if (isset($contact_owners))
-                            @foreach ($contact_owners as $owner)
-                                <option value='{{ $owner->id }}'
-                                   @if ($contact_owner)
-                                      @if ($owner->id == $contact_owner->id)
-                                         selected='selected'
-                                      @endif
-                                   @endif
-                                >{{ $owner->first_name }} {{ $owner->last_name }}</option>
-                            @endforeach
+                <form id='assign_contact_modal_form' method='POST' action='#'>
+                    <input type='hidden' name='contact_id' value='{{ $contact->id }}'>
+                    <div class='form-group'>
+                        <label for='contact_owner_id'>Contact Owner</label><br>
+                        <select class='form-control' name='contact_owner_id'>
+                            <option value=''>Unassigned</option>
+                            @if (isset($contact_owners))
+                                @foreach ($contact_owners as $owner)
+                                    <option value='{{ $owner->id }}'
+                                        @if ($contact_owner)
+                                            @if ($owner->id == $contact_owner->id)
+                                                selected='selected'
+                                            @endif
+                                        @endif
+                                    >{{ $owner->first_name }} {{ $owner->last_name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @if ($errors->has('contact_owner_id'))
+                            <div class='alert alert-danger mt-1'>{{ $errors->first('contact_owner_id') }}</div>
                         @endif
-                    </select>
-                    @if ($errors->has('contact_owner_id'))
-                        <div class='alert alert-danger mt-1'>{{ $errors->first('contact_owner_id') }}</div>
-                    @endif
-                </div>
+                    </div>
+                    <div id='contact_assign_response' class='alert alert-primary' role='alert' style='display:none;'></div>
+                </form>
             </div>
             <div class='modal-footer'>
                 <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
-                <button type='submit' class='btn btn-primary'>Save</button>
+                <button type='submit' class='btn btn-primary' id='assign_contact_modal_save_button'>Save</button>
             </div>
         </div>
     </div>

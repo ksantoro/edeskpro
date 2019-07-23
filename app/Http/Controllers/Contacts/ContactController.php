@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Contacts;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ContactCreate;
-use App\Models\Tenant\ActivityLog;
+use App\Models\Tenant\Activity\ActivityLog;
+use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\Tenant\Contact;
 use App\Models\Tenant\Location;
 use App\Models\Tenant\Notes;
@@ -216,22 +217,16 @@ class ContactController extends Controller
 
         // Activity Log
         //
-        $log                 = new ActivityLog();
-        $log->entity_type_id = EntityType::CONTACT;
-        $log->entity_id      = $contact->id;
-        $log->note           = 'Contact created in the system';
-        $log->user_id        = Auth::user()->id;
-        $log->created_at     = Carbon::now();
+        $log            = new ContactActivityLog();
+        $log->entity_id = $contact->id;
+        $log->note      = 'Contact created in the system';
         $log->save();
 
         if ($request->contact_owner_id) {
-            $owner               = User::find($request->contact_owner_id);
-            $log                 = new ActivityLog();
-            $log->entity_type_id = EntityType::CONTACT;
-            $log->entity_id      = $contact->id;
-            $log->note           = "Contact assigned to owner: {$owner->first_name} {$owner->last_name}";
-            $log->user_id        = Auth::user()->id;
-            $log->created_at     = Carbon::now();
+            $owner          = User::find($request->contact_owner_id);
+            $log            = new ContactActivityLog();
+            $log->entity_id = $contact->id;
+            $log->note      = "Contact assigned to owner: {$owner->first_name} {$owner->last_name}";
             $log->save();
         }
 
@@ -370,48 +365,48 @@ class ContactController extends Controller
         // Contact Owner
         //
         if ($request->contact_owner_id) {
+            $log            = new ContactActivityLog();
+            $log->entity_id = $contact->id;
+
             if ($contact->contact_owners()->first()) {
                 if ($request->contact_owner_id != $contact->contact_owners()->first()->id) {
-                    $owner               = User::find($request->contact_owner_id);
-                    $log                 = new ActivityLog();
-                    $log->entity_type_id = EntityType::CONTACT;
-                    $log->entity_id      = $contact->id;
-                    $log->note           = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
-                    $log->user_id        = Auth::user()->id;
-                    $log->created_at     = Carbon::now();
-                    $log->save();
-
+                    $owner     = User::find($request->contact_owner_id);
+                    $log->note = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
                     $contact->contact_owners()->detach();
                     $contact->contact_owners()->attach($request->contact_owner_id);
+                    $log->save();
                 }
             }
             else {
+                $owner     = User::find($request->contact_owner_id);
+                $log->note = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
                 $contact->contact_owners()->attach($request->contact_owner_id);
+                $log->save();
             }
         }
 
         // Contact Source
         //
         if ($request->contact_source) {
+            $log            = new ContactActivityLog();
+            $log->entity_id = $contact->id;
+
             if ($contact->lead_source()->first()) {
                 $source = LeadSource::find($contact->lead_source()->first()->id);
 
                 if ($request->contact_source != $source->id) {
-                    $new_source          = LeadSource::find($request->contact_source);
-                    $log                 = new ActivityLog();
-                    $log->entity_type_id = EntityType::CONTACT;
-                    $log->entity_id      = $contact->id;
-                    $log->note           = "Contact source changed from [{$source->name} {$source->description}] to [{$new_source->name} {$new_source->description}]";
-                    $log->user_id        = Auth::user()->id;
-                    $log->created_at     = Carbon::now();
-                    $log->save();
-
+                    $new_source = LeadSource::find($request->contact_source);
+                    $log->note  = "Contact source changed from [{$source->name} {$source->description}] to [{$new_source->name} {$new_source->description}]";
                     $contact->lead_source()->detach();
                     $contact->lead_source()->attach($request->contact_source);
+                    $log->save();
                 }
             }
             else {
+                $new_source = LeadSource::find($request->contact_source);
+                $log->note  = "Contact source changed from [Unknown] to [{$new_source->name} {$new_source->description}]";
                 $contact->lead_source()->attach($request->contact_source);
+                $log->save();
             }
         }
 
@@ -461,12 +456,9 @@ class ContactController extends Controller
 
         if (! empty($updated)) {
             foreach ($updated as $note) {
-                $log                 = new ActivityLog();
-                $log->entity_type_id = EntityType::CONTACT;
-                $log->entity_id      = $contact->id;
-                $log->note           = $note;
-                $log->user_id        = Auth::user()->id;
-                $log->created_at     = Carbon::now();
+                $log            = new ContactActivityLog();
+                $log->entity_id = $contact->id;
+                $log->note      = $note;
                 $log->save();
             }
         }
@@ -483,12 +475,9 @@ class ContactController extends Controller
 
         // Activity Log
         //
-        $log                 = new ActivityLog();
-        $log->entity_type_id = EntityType::CONTACT;
-        $log->entity_id      = $contact->id;
-        $log->note           = "Contact assigned to {$user->first_name} {$user->last_name}";
-        $log->user_id        = Auth::user()->id;
-        $log->created_at     = Carbon::now();
+        $log            = new ContactActivityLog();
+        $log->entity_id = $contact->id;
+        $log->note      = "Contact assigned to {$user->first_name} {$user->last_name}";
         $log->save();
 
         return redirect()->route('contacts.show', [$contact->id]);
@@ -509,12 +498,9 @@ class ContactController extends Controller
 
         // Activity Log
         //
-        $log                 = new ActivityLog();
-        $log->entity_type_id = EntityType::CONTACT;
-        $log->entity_id      = $contact->id;
-        $log->note           = 'Contact archived';
-        $log->user_id        = Auth::user()->id;
-        $log->created_at     = Carbon::now();
+        $log            = new ContactActivityLog();
+        $log->entity_id = $contact->id;
+        $log->note      = 'Contact archived';
         $log->save();
 
         return redirect()->route('contacts.index');

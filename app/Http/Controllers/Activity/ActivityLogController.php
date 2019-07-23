@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
-use App\Models\Main\EntityType;
-use App\Models\Tenant\ActivityLog;
+use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\Tenant\Contact;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class ActivityLogController extends Controller
@@ -25,12 +22,9 @@ class ActivityLogController extends Controller
             if (! empty($request->note)) {
                 if (! empty($request->contact_id)) {
                     if ($contact = Contact::find($request->contact_id)) {
-                        $log                 = new ActivityLog();
-                        $log->entity_type_id = EntityType::CONTACT;
+                        $log                 = new ContactActivityLog();
                         $log->entity_id      = $contact->id;
                         $log->note           = $request->note;
-                        $log->user_id        = Auth::user()->id;
-                        $log->created_at     = Carbon::now();
                         $log->save();
                     }
                 }

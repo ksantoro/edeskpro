@@ -1,57 +1,47 @@
 $(document).ready(function () {
 
-    // Sidebar Navigation
-    //
-    $('#edesk-logo-e').hide();
-
-    $('#sidebar-collapse').on('click',
-        function()
-        {
-            $('#sidebar').toggleClass('active');
-
-            if ($('#sidebar').hasClass('active'))
-            {
-                $('.search-site-div').hide();
-                $('#edesk-logo').hide();
-                $('#edesk-logo-e').show();
-                $(this).find('i:first').removeClass('fa-chevron-circle-left');
-                $(this).find('i:first').addClass('fa-chevron-circle-right');
-            }
-            else
-            {
-                $('.search-site-div').show();
-                $('#edesk-logo').show();
-                $('#edesk-logo-e').hide();
-                $(this).find('i:first').removeClass('fa-chevron-circle-right');
-                $(this).find('i:first').addClass('fa-chevron-circle-left');
-            }
-        }
-    );
-
-    $('#sidebar ul li a.dropdown-toggle').on('click',
-        function()
-        {
-            $(this).toggleClass('active');
-
-            if (! $(this).hasClass('active'))
-            {
-                var $submenu = $(this).find('ul.components:first');
-
-                $submenu.addClass('collapse');
-                $submenu.find('ul.components:first').removeClass('show');
-            }
-        }
-    );
-
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
     $(function() {
-        $('#modal_popup').on('show.bs.modal', function (e) {
-            $('#modal_popup_label').html($(e.relatedTarget).data('title'));
-            $('#modal_popup_title').html($(e.relatedTarget).data('title'));
+        $('#assign_contact_modal_popup').on('show.bs.modal', function (e) {
+            $('#assign_contact_modal_popup_label').html($(e.relatedTarget).data('title'));
+            $('#assign_contact_modal_popup_title').html($(e.relatedTarget).data('title'));
         });
+    });
+
+    $('#assign_contact_modal_save_button').on('click', function (){
+        $('#assign_contact_modal_form').submit();
+    });
+
+    $('#assign_contact_modal_form').on('submit', function(e){
+        alert('im submitted');
+        var contact_id = $('input[name="contact_id"]').val();
+        var owner_id   = $('select[name="contact_owner_id"]').val();
+
+        if (contact_id > 0) {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                method: 'POST',
+                url:    '/contacts/assign',
+                data: {
+                    contact_id :       contact_id,
+                    contact_owner_id : owner_id
+                }
+            })
+            .done(function(response) {
+                location.reload();
+            });
+        }
+
+        e.preventDefault();
     });
 
     // Hide/Show Password/Password Confirm
@@ -213,11 +203,12 @@ function log_contact_activity(contact_id, action)
 
         $.ajax({
             method: 'POST',
-            url:    'activity/contact',
+            url:    '/activity/contact',
             data: {
                 contact_id : contact_id,
                 note       : 'Contact ' + action
             }
-        });
+        })
+        .done();
     }
 }
