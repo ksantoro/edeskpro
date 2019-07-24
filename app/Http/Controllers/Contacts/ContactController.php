@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Contacts;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Contacts\ContactAssignRequest;
+use App\Http\Requests\Contacts\ContactSearchRequest;
+use App\Http\Requests\Contacts\ContactStoreRequest;
+use App\Http\Requests\Contacts\ContactUpdateRequest;
 use App\Mail\ContactCreate;
 use App\Models\Tenant\Activity\ActivityLog;
 use App\Models\Tenant\Activity\ContactActivityLog;
@@ -11,20 +15,15 @@ use App\Models\Tenant\Location;
 use App\Models\Tenant\Notes;
 use App\Models\Main\ContactMethodType;
 use App\Models\Main\ContactType;
-use App\Models\Main\EntityType;
 use App\Models\Main\LeadSource;
 use App\Models\Main\NotificationSendType;
 use App\Models\Main\NotificationType;
 use App\Models\Tenant\NotificationUser;
 use App\Models\Main\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
@@ -50,12 +49,13 @@ class ContactController extends Controller
             ->with('counts', $this->contact_counts());
     }
 
-    public function search(Request $request)
+    public function search(ContactSearchRequest $request)
     {
-        $contacts = Contact::where('first_name', 'LIKE', "%{$request->search_term}%")
-            ->orWhere('last_name', 'LIKE', "%{$request->search_term}%")
-            ->orWhere('phone', 'LIKE', "%{$request->search_term}%")
-            ->orWhere('email', 'LIKE', "%{$request->search_term}%")
+        $valid    = $request->validated();
+        $contacts = Contact::where('first_name', 'LIKE', "%{$valid['search_term']}%")
+            ->orWhere('last_name', 'LIKE', "%{$valid['search_term']}%")
+            ->orWhere('phone', 'LIKE', "%{$valid['search_term']}%")
+            ->orWhere('email', 'LIKE', "%{$valid['search_term']}%")
             ->get();
 
         return view('contacts.index')
@@ -109,65 +109,35 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ContactStoreRequest $request)
     {
         Log::debug($request);
-        $request->merge(array_map('trim', $request->all()));
 
-        $validator = Validator::make($request->all(), [
-            'first_name'            => 'required|max:255',
-            'last_name'             => 'required|max:255',
-            'title'                 => 'nullable|max:255',
-            'contact_owner_id'      => 'nullable|numeric|max:25',
-            'contact_source'        => 'nullable|numeric|max:25',
-            'contact_type_id'       => 'required|numeric|max:25',
-            'email'                 => 'required|email|unique:tenant.contacts',
-            'email_type_id'         => 'required|numeric|max:25',
-            'phone'                 => 'required|numeric|regex:/[0-9]{10}/',
-            'phone_type_id'         => 'required|numeric|max:25',
-            'billing_address_type'  => 'required|numeric|max:25',
-            'billing_street'        => 'required|max:255',
-            'billing_suite'         => 'nullable|max:255',
-            'billing_city'          => 'required|max:255',
-            'billing_state'         => 'required|max:255',
-            'billing_zip'           => 'required|max:255',
-            'delivery_address_type' => 'required|numeric|max:25',
-            'delivery_street'       => 'required|max:255',
-            'delivery_suite'        => 'nullable|max:255',
-            'delivery_city'         => 'required|max:255',
-            'delivery_state'        => 'required|max:255',
-            'delivery_zip'          => 'required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('/contacts/create')
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $valid = $request->validated();
 
         // Contact Basic Info
         //
         $contact                  = new Contact;
-        $contact->contact_type_id = $request->contact_type_id;
-        $contact->first_name      = $request->first_name;
-        $contact->last_name       = $request->last_name;
-        $contact->title           = $request->title;
-        $contact->email           = $request->email;
-        $contact->email_type_id   = $request->email_type_id;
-        $contact->phone           = $request->phone;
-        $contact->phone_type_id   = $request->phone_type_id;
+        $contact->contact_type_id = $valid['contact_type_id'];
+        $contact->first_name      = $valid['first_name'];
+        $contact->last_name       = $valid['last_name'];
+        $contact->title           = $valid['title'];
+        $contact->email           = $valid['email'];
+        $contact->email_type_id   = $valid['email_type_id'];
+        $contact->phone           = $valid['phone'];
+        $contact->phone_type_id   = $valid['phone_type_id'];
         $contact->save();
 
         // Contact Owner
         //
-        if ($request->contact_owner_id) {
-           $contact->contact_owners()->attach($request->contact_owner_id);
+        if ($valid['contact_owner_id']) {
+           $contact->contact_owners()->attach($valid['contact_owner_id']);
         }
 
         // Contact Source
         //
-        if ($request->contact_source) {
-            $contact->lead_source()->attach($request->contact_source);
+        if ($valid['contact_source']) {
+            $contact->lead_source()->attach($valid['contact_source']);
         }
 
         // Contact Billing Info
@@ -175,12 +145,12 @@ class ContactController extends Controller
         $billing = new Location;
         $billing->contact_id             = $contact->id;
         $billing->is_billing             = 1;
-        $billing->contact_method_type_id = $request->billing_address_type;
-        $billing->street                 = $request->billing_street;
-        $billing->suite                  = $request->billing_suite;
-        $billing->city                   = $request->billing_city;
-        $billing->state                  = $request->billing_state;
-        $billing->zip                    = $request->billing_zip;
+        $billing->contact_method_type_id = $valid['billing_address_type'];
+        $billing->street                 = $valid['billing_street'];
+        $billing->suite                  = $valid['billing_suite'];
+        $billing->city                   = $valid['billing_city'];
+        $billing->state                  = $valid['billing_state'];
+        $billing->zip                    = $valid['billing_zip'];
         $billing->save();
 
         // Contact Delivery Info
@@ -188,25 +158,23 @@ class ContactController extends Controller
         $delivery                         = new Location;
         $delivery->contact_id             = $contact->id;
         $delivery->is_billing             = 0;
-        $delivery->contact_method_type_id = $request->delivery_address_type;
-        $delivery->street                 = $request->delivery_street;
-        $delivery->suite                  = $request->delivery_suite;
-        $delivery->city                   = $request->delivery_city;
-        $delivery->state                  = $request->delivery_state;
-        $delivery->zip                    = $request->delivery_zip;
+        $delivery->contact_method_type_id = $valid['delivery_address_type'];
+        $delivery->street                 = $valid['delivery_street'];
+        $delivery->suite                  = $valid['delivery_suite'];
+        $delivery->city                   = $valid['delivery_city'];
+        $delivery->state                  = $valid['delivery_state'];
+        $delivery->zip                    = $valid['delivery_zip'];
         $delivery->save();
 
         // Send Notifications
         //
-        if ($request->contact_owner_id) {
-            Mail::to(User::find($request->contact_owner_id))->send(new ContactCreate($contact));
+        if ($valid['contact_owner_id']) {
+            Mail::to(User::find($valid['contact_owner_id']))->send(new ContactCreate($contact));
         }
 
-        try
-        {
+        try {
             if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(1), NotificationSendType::find(2))) {
-                foreach ($users_to_notify as $user_to_notify)
-                {
+                foreach ($users_to_notify as $user_to_notify) {
                     Mail::to(User::find($user_to_notify))->send(new ContactCreate($contact));
                 }
             }
@@ -222,8 +190,8 @@ class ContactController extends Controller
         $log->note      = 'Contact created in the system';
         $log->save();
 
-        if ($request->contact_owner_id) {
-            $owner          = User::find($request->contact_owner_id);
+        if ($valid['contact_owner_id']) {
+            $owner          = User::find($valid['contact_owner_id']);
             $log            = new ContactActivityLog();
             $log->entity_id = $contact->id;
             $log->note      = "Contact assigned to owner: {$owner->first_name} {$owner->last_name}";
@@ -303,55 +271,25 @@ class ContactController extends Controller
     * @param  \App\Contact  $contact
     * @return \Illuminate\Http\Response
     */
-    public function update(Request $request, $id)
+    public function update(ContactUpdateRequest $request, $id)
     {
         Log::debug($request);
+
         $updated = [];
-        $request->merge(array_map('trim', $request->all()));
-
-        $validator = Validator::make($request->all(), [
-            'first_name'            => 'required|max:255',
-            'last_name'             => 'required|max:255',
-            'title'                 => 'nullable|max:255',
-            'contact_owner_id'      => 'nullable|numeric|max:25',
-            'contact_source'        => 'nullable|numeric|max:25',
-            'contact_type_id'       => 'required|numeric|max:25',
-            'email'                 => 'required|email|max:255',
-            'email_type_id'         => 'required|numeric|max:25',
-            'phone'                 => 'required|numeric|regex:/[0-9]{10}/',
-            'phone_type_id'         => 'required|numeric|max:25',
-            'billing_address_type'  => 'required|numeric|max:25',
-            'billing_street'        => 'required|max:255',
-            'billing_suite'         => 'nullable|max:255',
-            'billing_city'          => 'required|max:255',
-            'billing_state'         => 'required|max:255',
-            'billing_zip'           => 'required|max:255',
-            'delivery_address_type' => 'required|numeric|max:25',
-            'delivery_street'       => 'required|max:255',
-            'delivery_suite'        => 'nullable|max:255',
-            'delivery_city'         => 'required|max:255',
-            'delivery_state'        => 'required|max:255',
-            'delivery_zip'          => 'required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-           return redirect("/contacts/{$id}/edit")
-               ->withErrors($validator)
-               ->withInput();
-        }
+        $valid   = $request->validated();
 
         // Contact Basic Info
         //
         $contact                  = Contact::find($id);
         $contact_original         = $contact->getOriginal();
-        $contact->contact_type_id = $request->contact_type_id;
-        $contact->first_name      = $request->first_name;
-        $contact->last_name       = $request->last_name;
-        $contact->title           = $request->title;
-        $contact->email           = $request->email;
-        $contact->email_type_id   = $request->email_type_id;
-        $contact->phone           = $request->phone;
-        $contact->phone_type_id   = $request->phone_type_id;
+        $contact->contact_type_id = $valid['contact_type_id'];
+        $contact->first_name      = $valid['first_name'];
+        $contact->last_name       = $valid['last_name'];
+        $contact->title           = $valid['title'];
+        $contact->email           = $valid['email'];
+        $contact->email_type_id   = $valid['email_type_id'];
+        $contact->phone           = $valid['phone'];
+        $contact->phone_type_id   = $valid['phone_type_id'];
         $contact->save();
 
         if ($changes = $contact->getChanges()) {
@@ -364,48 +302,48 @@ class ContactController extends Controller
 
         // Contact Owner
         //
-        if ($request->contact_owner_id) {
+        if ($valid['contact_owner_id']) {
             $log            = new ContactActivityLog();
             $log->entity_id = $contact->id;
 
             if ($contact->contact_owners()->first()) {
-                if ($request->contact_owner_id != $contact->contact_owners()->first()->id) {
-                    $owner     = User::find($request->contact_owner_id);
+                if ($valid['contact_owner_id'] != $contact->contact_owners()->first()->id) {
+                    $owner     = User::find($valid['contact_owner_id']);
                     $log->note = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
                     $contact->contact_owners()->detach();
-                    $contact->contact_owners()->attach($request->contact_owner_id);
+                    $contact->contact_owners()->attach($valid['contact_owner_id']);
                     $log->save();
                 }
             }
             else {
-                $owner     = User::find($request->contact_owner_id);
+                $owner     = User::find($valid['contact_owner_id']);
                 $log->note = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
-                $contact->contact_owners()->attach($request->contact_owner_id);
+                $contact->contact_owners()->attach($valid['contact_owner_id']);
                 $log->save();
             }
         }
 
         // Contact Source
         //
-        if ($request->contact_source) {
+        if ($valid['contact_source']) {
             $log            = new ContactActivityLog();
             $log->entity_id = $contact->id;
 
             if ($contact->lead_source()->first()) {
                 $source = LeadSource::find($contact->lead_source()->first()->id);
 
-                if ($request->contact_source != $source->id) {
-                    $new_source = LeadSource::find($request->contact_source);
+                if ($valid['contact_source'] != $source->id) {
+                    $new_source = LeadSource::find($valid['contact_source']);
                     $log->note  = "Contact source changed from [{$source->name} {$source->description}] to [{$new_source->name} {$new_source->description}]";
                     $contact->lead_source()->detach();
-                    $contact->lead_source()->attach($request->contact_source);
+                    $contact->lead_source()->attach($valid['contact_source']);
                     $log->save();
                 }
             }
             else {
-                $new_source = LeadSource::find($request->contact_source);
+                $new_source = LeadSource::find($valid['contact_source']);
                 $log->note  = "Contact source changed from [Unknown] to [{$new_source->name} {$new_source->description}]";
-                $contact->lead_source()->attach($request->contact_source);
+                $contact->lead_source()->attach($valid['contact_source']);
                 $log->save();
             }
         }
@@ -416,12 +354,12 @@ class ContactController extends Controller
         $billing_original                = $billing->getOriginal();
         $billing->contact_id             = $contact->id;
         $billing->is_billing             = 1;
-        $billing->contact_method_type_id = $request->billing_address_type;
-        $billing->street                 = $request->billing_street;
-        $billing->suite                  = $request->billing_suite;
-        $billing->city                   = $request->billing_city;
-        $billing->state                  = $request->billing_state;
-        $billing->zip                    = $request->billing_zip;
+        $billing->contact_method_type_id = $valid['billing_address_type'];
+        $billing->street                 = $valid['billing_street'];
+        $billing->suite                  = $valid['billing_suite'];
+        $billing->city                   = $valid['billing_city'];
+        $billing->state                  = $valid['billing_state'];
+        $billing->zip                    = $valid['billing_zip'];
         $billing->save();
 
         // Contact Delivery Info
@@ -430,12 +368,12 @@ class ContactController extends Controller
         $delivery_original                = $billing->getOriginal();
         $delivery->contact_id             = $contact->id;
         $delivery->is_billing             = 0;
-        $delivery->contact_method_type_id = $request->delivery_address_type;
-        $delivery->street                 = $request->delivery_street;
-        $delivery->suite                  = $request->delivery_suite;
-        $delivery->city                   = $request->delivery_city;
-        $delivery->state                  = $request->delivery_state;
-        $delivery->zip                    = $request->delivery_zip;
+        $delivery->contact_method_type_id = $valid['delivery_address_type'];
+        $delivery->street                 = $valid['delivery_street'];
+        $delivery->suite                  = $valid['delivery_suite'];
+        $delivery->city                   = $valid['delivery_city'];
+        $delivery->state                  = $valid['delivery_state'];
+        $delivery->zip                    = $valid['delivery_zip'];
         $delivery->save();
 
         if ($changes = $billing->getChanges()) {
@@ -466,12 +404,13 @@ class ContactController extends Controller
        return redirect()->route('contacts.show', [$contact->id]);
     }
 
-    public function assign(Request $request)
+    public function assign(ContactAssignRequest $request)
     {
-        $contact = Contact::find($request->contact_id);
-        $user    = User::find($request->contact_owner_id);
+        $valid   = $request->validated();
+        $contact = Contact::find($valid['contact_id']);
+        $user    = User::find($valid['contact_owner_id']);
         $contact->contact_owners()->detach();
-        $contact->contact_owners()->attach($request->contact_owner_id);
+        $contact->contact_owners()->attach($valid['contact_owner_id']);
 
         // Activity Log
         //

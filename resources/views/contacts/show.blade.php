@@ -29,7 +29,7 @@
                 <div class='card-header'>Contact Details</div>
 
                <div class='card-body'>
-                  <b>Name:</b> {{ $contact->first_name }} {{ $contact->last_name }}<br>
+                  <b>Name:</b> {{ $contact->first_name }} {{ $contact->last_name }} (Title: {{ $contact->title }})<br>
                   <b>Email:</b> {{ $contact->email }}
                      @foreach($contact_method_types as $contact_method)
                         @if ($contact_method->id == $contact->email_type_id)
