@@ -340,7 +340,7 @@
             <br>
             <div class='form-group'>
                <input type='submit' value='Save Contact' class='btn btn-primary btn-lg'>
-               <a href='{{ route('contacts.index') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+               <a href='{{ route('contacts.show', $contact->id) }}' class='btn btn-secondary btn-lg'>Cancel</a>
             </div>
             </form>
          </div>

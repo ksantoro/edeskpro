@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
 
             // Scheduled Tasks Per Tenant
             //
-            $schedule->job(new ContactNoAction($tenant))->everyThirtyMinutes();
+            $schedule->job(new ContactNoAction($tenant));
         }
     }
 
