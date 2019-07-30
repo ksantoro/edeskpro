@@ -231,7 +231,18 @@
                            <div class='col'>
                               <div class='form-group'>
                                  <label for='billing_state'>State</label>
-                                 <input type='text' name='billing_state' id='billing_state' class='form-control' value='{{ $billing->state }}'>
+                                  <select name='billing_state' id='billing_state' class='form-control' value='{{ $billing->state }}'>
+                                      @foreach ($states as $state)
+                                          <option
+                                              value='{{ $state->code }}'
+                                              @if ($billing->state == $state->code)
+                                              selected='selected'
+                                              @endif
+                                          >
+                                              {{ $state->code }} - {{ $state->name }}
+                                          </option>
+                                      @endforeach
+                                  </select>
                                  @if ($errors->has('billing_state'))
                                     <div class='alert alert-danger mt-1'>{{ $errors->first('billing_state') }}</div>
                                  @endif
@@ -295,7 +306,18 @@
                            <div class='col'>
                               <div class='form-group'>
                                  <label for='delivery_state'>State</label>
-                                 <input type='text' name='delivery_state' id='delivery_state' class='form-control' value='{{ $delivery->state }}'>
+                                  <select name='delivery_state' id='delivery_state' class='form-control' value='{{ $delivery->state }}'>
+                                      @foreach ($states as $state)
+                                          <option
+                                              value='{{ $state->code }}'
+                                              @if ($delivery->state == $state->code)
+                                              selected='selected'
+                                              @endif
+                                          >
+                                              {{ $state->code }} - {{ $state->name }}
+                                          </option>
+                                      @endforeach
+                                  </select>
                                  @if ($errors->has('delivery_state'))
                                     <div class='alert alert-danger mt-1'>{{ $errors->first('delivery_state') }}</div>
                                  @endif

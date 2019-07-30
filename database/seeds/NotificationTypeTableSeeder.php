@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\Main\NotificationType;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use App\Models\Main\NotificationType;
+use Illuminate\Support\Facades\DB;
 
 class NotificationTypeTableSeeder extends Seeder
 {
@@ -13,6 +14,8 @@ class NotificationTypeTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('notification_types')->truncate();
+
         $items = [
             [
                 'id'             => 1,
@@ -53,7 +56,7 @@ class NotificationTypeTableSeeder extends Seeder
                 'id'             => 6,
                 'entity_type_id' => 2, // User
                 'action_type_id' => 3, // Delete
-                'description'    => 'User was delted from the system.',
+                'description'    => 'User was deleted from the system and archived.',
                 'created_at'     => Carbon::now()->toDateTimeString()
             ],
             [
@@ -61,13 +64,6 @@ class NotificationTypeTableSeeder extends Seeder
                 'entity_type_id' => 3, // Contact
                 'action_type_id' => 7, // Notify
                 'description'    => 'Notify No Action Taken on Contact',
-                'created_at'     => Carbon::now()->toDateTimeString()
-            ],
-            [
-                'id'             => 8,
-                'entity_type_id' => 3, // Contact
-                'action_type_id' => 8, // NRemind
-                'description'    => 'Reminder No Action Taken on Contact',
                 'created_at'     => Carbon::now()->toDateTimeString()
             ],
         ];

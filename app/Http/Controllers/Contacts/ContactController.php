@@ -7,7 +7,9 @@ use App\Http\Requests\Contacts\ContactAssignRequest;
 use App\Http\Requests\Contacts\ContactSearchRequest;
 use App\Http\Requests\Contacts\ContactStoreRequest;
 use App\Http\Requests\Contacts\ContactUpdateRequest;
-use App\Mail\ContactCreate;
+use App\Mail\Contacts\ContactCreate;
+use App\Mail\Contacts\ContactUpdate;
+use App\Mail\Contacts\ContactDelete;
 use App\Models\Tenant\Activity\ActivityLog;
 use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\Tenant\Contact;
@@ -18,6 +20,7 @@ use App\Models\Main\ContactType;
 use App\Models\Main\LeadSource;
 use App\Models\Main\NotificationSendType;
 use App\Models\Main\NotificationType;
+use App\Models\Main\States;
 use App\Models\Tenant\NotificationUser;
 use App\Models\Main\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -105,7 +108,8 @@ class ContactController extends Controller
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
             'contact_sources'      => LeadSource::all(),
-            'contact_types'        => ContactType::all()
+            'contact_types'        => ContactType::all(),
+            'states'               => States::all(),
         ]);
     }
 
@@ -260,7 +264,8 @@ class ContactController extends Controller
             'contact_method_types' => ContactMethodType::all(),
             'contact_owners'       => User::AllUsers()->get(),
             'contact_sources'      => LeadSource::all(),
-            'contact_types'        => ContactType::all()
+            'contact_types'        => ContactType::all(),
+            'states'               => States::all(),
         ]);
     }
 
@@ -303,48 +308,38 @@ class ContactController extends Controller
         // Contact Owner
         //
         if ($valid['contact_owner_id']) {
-            $log            = new ContactActivityLog();
-            $log->entity_id = $contact->id;
-
             if ($contact->contact_owners()->first()) {
                 if ($valid['contact_owner_id'] != $contact->contact_owners()->first()->id) {
                     $owner     = User::find($valid['contact_owner_id']);
-                    $log->note = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
+                    $updated[] = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
                     $contact->contact_owners()->detach();
                     $contact->contact_owners()->attach($valid['contact_owner_id']);
-                    $log->save();
                 }
             }
             else {
                 $owner     = User::find($valid['contact_owner_id']);
-                $log->note = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
+                $updated[] = "Contact assigned to new owner: {$owner->first_name} {$owner->last_name}";
                 $contact->contact_owners()->attach($valid['contact_owner_id']);
-                $log->save();
             }
         }
 
         // Contact Source
         //
         if ($valid['contact_source']) {
-            $log            = new ContactActivityLog();
-            $log->entity_id = $contact->id;
-
             if ($contact->lead_source()->first()) {
                 $source = LeadSource::find($contact->lead_source()->first()->id);
 
                 if ($valid['contact_source'] != $source->id) {
                     $new_source = LeadSource::find($valid['contact_source']);
-                    $log->note  = "Contact source changed from [{$source->name} {$source->description}] to [{$new_source->name} {$new_source->description}]";
+                    $updated[]  = "Contact source changed from [{$source->name} {$source->description}] to [{$new_source->name} {$new_source->description}]";
                     $contact->lead_source()->detach();
                     $contact->lead_source()->attach($valid['contact_source']);
-                    $log->save();
                 }
             }
             else {
                 $new_source = LeadSource::find($valid['contact_source']);
-                $log->note  = "Contact source changed from [Unknown] to [{$new_source->name} {$new_source->description}]";
+                $updated[]  = "Contact source changed from [Unknown] to [{$new_source->name} {$new_source->description}]";
                 $contact->lead_source()->attach($valid['contact_source']);
-                $log->save();
             }
         }
 
@@ -399,6 +394,17 @@ class ContactController extends Controller
                 $log->note      = $note;
                 $log->save();
             }
+
+            try {
+                if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(2), NotificationSendType::find(2))) {
+                    foreach ($users_to_notify as $user_to_notify) {
+                        Mail::to(User::find($user_to_notify))->send(new ContactUpdate($contact, $updated));
+                    }
+                }
+            }
+            catch (\Exception $exception) {
+                Log::debug($exception);
+            }
         }
 
        return redirect()->route('contacts.show', [$contact->id]);
@@ -416,8 +422,21 @@ class ContactController extends Controller
         //
         $log            = new ContactActivityLog();
         $log->entity_id = $contact->id;
-        $log->note      = "Contact assigned to {$user->first_name} {$user->last_name}";
+        $log->note      = $updated[] = "Contact assigned to {$user->first_name} {$user->last_name}";
         $log->save();
+
+        // Notification
+        //
+        try {
+            if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(2), NotificationSendType::find(2))) {
+                foreach ($users_to_notify as $user_to_notify) {
+                    Mail::to(User::find($user_to_notify))->send(new ContactUpdate($contact, $updated));
+                }
+            }
+        }
+        catch (\Exception $exception) {
+            Log::debug($exception);
+        }
 
         return redirect()->route('contacts.show', [$contact->id]);
     }
@@ -441,6 +460,19 @@ class ContactController extends Controller
         $log->entity_id = $contact->id;
         $log->note      = 'Contact archived';
         $log->save();
+
+        // Notification
+        //
+        try {
+            if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(3), NotificationSendType::find(2))) {
+                foreach ($users_to_notify as $user_to_notify) {
+                    Mail::to(User::find($user_to_notify))->send(new ContactDelete($contact));
+                }
+            }
+        }
+        catch (\Exception $exception) {
+            Log::debug($exception);
+        }
 
         return redirect()->route('contacts.index');
     }

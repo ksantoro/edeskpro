@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Jobs\ContactNoAction;
+use App\Models\Main\Company;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,8 +26,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // Multi Tenant Tasks Runner
+        //
+        $tenants = Company::all();
+
+        foreach ($tenants as $tenant) {
+
+            // Scheduled Tasks Per Tenant
+            //
+            $schedule->job(new ContactNoAction($tenant))->everyThirtyMinutes();
+        }
     }
 
     /**

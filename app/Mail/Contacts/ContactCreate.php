@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Contacts;
 
 use App\Models\Main\Company;
 use App\Models\Tenant\Contact;

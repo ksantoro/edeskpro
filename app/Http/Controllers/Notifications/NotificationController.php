@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Notifications;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ContactCreate;
-use App\Mail\NotificationCreate;
+use App\Mail\Contacts\ContactCreate;
+use App\Mail\Notifications\NotificationCreate;
 use App\Models\Main\NotificationSendType;
 use App\Models\Main\NotificationType;
 use App\Models\Main\User;
