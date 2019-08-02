@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\ContactNoAction;
 use App\Models\Main\Company;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -34,7 +35,7 @@ class Kernel extends ConsoleKernel
 
             // Scheduled Tasks Per Tenant
             //
-            $schedule->job(new ContactNoAction($tenant));
+            $schedule->job(new ContactNoAction($tenant))->hourly();
         }
     }
 

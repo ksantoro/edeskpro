@@ -8,7 +8,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Auth;
 
 class ContactNoActionNotification extends Mailable
 {
@@ -26,9 +25,9 @@ class ContactNoActionNotification extends Mailable
      *
      * @return void
      */
-    public function __construct(Contact $contact)
+    public function __construct(Contact $contact, Company $tenant)
     {
-        $this->company  = Company::find(Auth::user()->company_id);
+        $this->company  = $tenant;
         $this->contact  = $contact;
         $this->billing  = $contact->locations()->where('is_billing', 1)->first();
         $this->delivery = $contact->locations()->where('is_billing', 0)->first();

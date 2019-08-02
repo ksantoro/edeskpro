@@ -64,10 +64,3 @@ Route::resource('users', 'Users\UserController');
 Route::get('users/{user}/profile/', 'Users\UserController@profile')->name('users.profile');
 Route::get('users/{user}/settings', 'Users\UserController@settings')->name('users.settings');
 Route::post('users/search',  'Users\UserController@search')->name('users.search');
-
-// Testing Email Templates
-//
-Route::get('/test_email_template', 'Notifications\NotificationController@test_email_template')->name('notifications.test_email_template');
-
-// Testing React
-Route::get('home', 'HomeController@index');

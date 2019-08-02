@@ -3,12 +3,15 @@
 namespace App\Models\Tenant;
 
 use App\Models\Main\ContactType;
-use App\Models\Main\EntityType;
 use App\Models\Main\LeadSource;
 use App\Models\Main\User;
+use App\Models\Tenant\Activity\ActivityLog;
+use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\TenantModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Contact extends TenantModel
 {
@@ -30,6 +33,11 @@ class Contact extends TenantModel
             'email',
             'email_type_id',
         ];
+
+    public function activityLog()
+    {
+        return $this->hasMany(ContactActivityLog::class, 'entity_id', 'id');
+    }
 
     public function locations()
     {
@@ -68,14 +76,23 @@ class Contact extends TenantModel
         return $query->where('contact_type_id', self::TYPE_CUSTOMER);
     }
 
-    public function scopeNoActionTaken($query)
+    public function noActionTaken()
     {
-        return $query->leftJoin('activity_log', function ($join) {
-                $join->on('activity_log.entity_id', '=', 'contacts.id')
-                    ->where('activity_log.entity_type_id', '=', EntityType::CONTACT);
-            })
-            ->where('contacts.created_at', '>', 'DATE_SUB(NOW(), INTERVAL 1 HOUR)')
-            ->where('contacts.deleted_at', '!=', 'null')
-            ->where('activity_log.id', '=', 'null');
+        $noAction = [];
+
+        try {
+            if ($contacts = Contact::has('activityLog')->where('created_at', '>', Carbon::now()->subHours(1)->toDateTimeString())->get()) {
+                foreach ($contacts as $contact) {
+                    if (count(ActivityLog::contact($contact)->get()) <= 1) {
+                        $noAction[] = $contact;
+                    }
+                }
+            }
+        }
+        catch (\Exception $exception) {
+            Log::debug(__METHOD__, $exception);
+        }
+
+        return $noAction;
     }
 }
