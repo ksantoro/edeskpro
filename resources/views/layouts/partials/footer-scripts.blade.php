@@ -4,4 +4,4 @@
 <!-- Bootstrap JS -->
 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js' integrity='' crossorigin='anonymous'></script>
 
-<script src='{{ asset('js/functions.js') }}'></script>
+<script src='/js/functions.js'></script>
