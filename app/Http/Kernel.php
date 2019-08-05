@@ -3,7 +3,6 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckRole;
-use App\Http\Middleware\HttpsProtocol;
 use App\Http\Middleware\Tenant;
 use App\Http\Middleware\SuperUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -23,7 +22,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        HttpsProtocol::class,
     ];
 
     /**
@@ -40,7 +38,6 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            HttpsProtocol::class,
         ],
 
         'api' => [
