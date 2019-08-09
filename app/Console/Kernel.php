@@ -6,6 +6,7 @@ use App\Jobs\ContactNoAction;
 use App\Models\Main\Company;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -31,6 +32,9 @@ class Kernel extends ConsoleKernel
         $tenants = Company::all();
 
         foreach ($tenants as $tenant) {
+
+            Log::debug(' ----- Running Scheduled Tasks for Tenant: ----- ');
+            Log::debug(" Tenant -  {$tenant->name}, DB - {$tenant->database}");
 
             // Scheduled Tasks Per Tenant
             //
