@@ -7,11 +7,11 @@
    <div class='container-fluid'>
       <div class='d-flex flex-row'>
          <div class='p-2'>
-            <a href='{{ route('contacts.create') }}' class='btn btn-primary'>Create New</a>
+            <a href='/contacts/create' class='btn btn-primary'>Create New</a>
          </div>
          <div class='p-2 flex-grow-1'>
              <!-- Search box -->
-             <form id='search-contacts' action="{{ route('contacts.search') }}" method='POST'>
+             <form id='search-contacts' action="/contacts/search" method='POST'>
                  @csrf
                     <div class='input-group mb-3'>
                         <div class='input-group-prepend'>
@@ -22,7 +22,7 @@
              </form>
          </div>
           <div class='p-2'>
-              <a href='{{ route('contacts.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
+              <a href='/contacts' class='btn btn-secondary float-right'>Clear Search</a>
           </div>
       </div>
       <div class='row'>
@@ -83,21 +83,21 @@
                                     <div class='col-4 mr-auto'>
                                         {{--action icons (temporary)--}}
                                         <div class='float-right px-1'>
-                                            <a href='{{ route('contacts.destroy', ['contact' => $contact]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $contact->id }}').submit();">
+                                            <a href='#' onclick="event.preventDefault(); $('#archive-form-{{ $contact->id }}').submit();">
                                             <i class='fas fa-archive'  title='Archive Contact' data-toggle='tooltip' data-placement='bottom'></i>
                                             </a>
-                                            <form id='archive-form-{{ $contact->id }}' action="{{ route('contacts.destroy', ['contact' => $contact]) }}" method='POST' style='display: none;'>
+                                            <form id='archive-form-{{ $contact->id }}' action="/contacts/{{ $contact->id }}" method='POST' class='d-none'>
                                             @method('DELETE')
                                             @csrf
                                             </form>
                                         </div>
                                         <div class='float-right px-1'>
-                                            <a href='{{ route('contacts.edit', ['contact' => $contact]) }}' class='float-right'>
+                                            <a href='/contacts/{{ $contact->id }}/edit' class='float-right'>
                                                 <i class='fas fa-user-edit' title='Edit Contact' data-toggle='tooltip' data-placement='bottom'></i>
                                             </a>
                                         </div>
                                         <div class='float-right px-1'>
-                                            <a href='{{ route('contacts.show', ['contact' => $contact]) }}'>
+                                            <a href='/contacts/{{ $contact->id }}'>
                                                 <i class='far fa-eye' title='View Contact' data-toggle='tooltip' data-placement='bottom'></i>
                                             </a>
                                         </div>

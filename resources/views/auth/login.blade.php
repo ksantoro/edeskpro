@@ -8,10 +8,8 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
-                    {{csrf_field()}}
+                    <form method="POST" action="/login" aria-label="{{ __('Login') }}">
                         @csrf
-
                         <div class="form-group row">
                             <label for="email" class="col-sm-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
@@ -56,7 +54,7 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                <a class="btn btn-link" href="/password/reset">
                                     {{ __('Forgot Your Password?') }}
                                 </a>
                             </div>

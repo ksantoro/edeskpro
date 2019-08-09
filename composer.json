@@ -8,6 +8,7 @@
         "php": "^7.1.3",
         "aws/aws-sdk-php": "^3.108",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
+        "doctrine/dbal": "^2.9",
         "dusterio/laravel-aws-worker": "^0.1.17",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",

@@ -25,7 +25,7 @@ class RegisterController extends Controller
     /**
      * Where to redirect users after registration.
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/login';
 
     public function __construct()
     {

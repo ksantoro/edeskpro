@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class='row'>
             <div class='col-md-1'>
-                <a href='{{ route('companies.create') }}' class='btn btn-primary'>Create New</a>
+                <a href='/companies/create' class='btn btn-primary'>Create New</a>
             </div>
             <div class='col-md-11'>
                 <!-- Search box -->

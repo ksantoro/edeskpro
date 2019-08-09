@@ -10,8 +10,8 @@
             <div class='card'>
                <div class='card-header'>Contact Information</div>
                <div class='card-body'>
-                  <form id='create-new-contact' name='create-new-contact' action='{{ route('contacts.store') }}' method='POST'>
-                     {{ csrf_field() }}
+                  <form id='create-new-contact' name='create-new-contact' action='/contacts' method='POST'>
+                     @csrf
                      <div class='row form-row'>
                         <div class='col'>
                             <div class='row form-row'>
@@ -312,7 +312,7 @@
             <div class='form-group'>
                <input type='submit' value='Save New Contact' class='btn btn-primary btn-lg'>
                <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-contact").reset();'>Clear Form</a>
-               <a href='{{ URL::to('contacts') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+               <a href='/contacts' class='btn btn-secondary btn-lg'>Cancel</a>
             </div>
             </form>
          </div>

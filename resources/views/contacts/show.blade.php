@@ -13,7 +13,7 @@
          </div>
           <div class='col-sm-4'>
               <p class='float-right'>
-                  <a href='{{ route('contacts.edit', ['contact' => $contact]) }}'>Edit</a> |
+                  <a href='/contacts/{{ $contact->id }}/edit'>Edit</a> |
                   <a href='#' data-toggle='modal'
                      data-id='{{ $contact->id }}'
                      data-title='Assign Owner to {{ $contact->first_name }} {{ $contact->last_name }}'

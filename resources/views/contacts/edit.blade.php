@@ -10,9 +10,9 @@
             <div class='card'>
                <div class='card-header'>Edit {{ $contact->first_name }} {{ $contact->last_name }}</div>
                <div class='card-body'>
-                  <form id='edit-contact' name='edit-contact' action='{{ route('contacts.update', $contact->id) }}' method='POST'>
-                  {{ csrf_field() }}
-                      {{ method_field('PUT') }}
+                  <form id='edit-contact' name='edit-contact' action='/contacts/{{ $contact->i }}' method='POST'>
+                     @csrf
+                     {{ method_field('PUT') }}
                      <div class='row form-row'>
                         <div class='col'>
                             <div class='row form-row'>
@@ -340,7 +340,7 @@
             <br>
             <div class='form-group'>
                <input type='submit' value='Save Contact' class='btn btn-primary btn-lg'>
-               <a href='{{ route('contacts.show', $contact->id) }}' class='btn btn-secondary btn-lg'>Cancel</a>
+               <a href='/contacts/{{ $contact->id }}' class='btn btn-secondary btn-lg'>Cancel</a>
             </div>
             </form>
          </div>

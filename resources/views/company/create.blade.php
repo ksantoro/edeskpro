@@ -6,8 +6,8 @@
         <div class='container-fluid'>
             <div class='row justify-content-center'>
                 <div class='col-md-12'>
-                    <form id='create-new-company' name='create-new-company' action='{{ route('companies.store') }}' method='POST'>
-                    {{ csrf_field() }}
+                    <form id='create-new-company' name='create-new-company' action='/companies' method='POST'>
+                    @csrf
                         <!-- company info -->
                         <div class='card'>
                             <div class='card-header'>Company Information</div>
@@ -113,8 +113,8 @@
                         <br>
                         <div class='form-group'>
                             <input type='submit' value='Save New Company' class='btn btn-primary btn-lg'>
-                            <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
-                            <a href='{{ URL::to('users') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+                            <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-company").reset();'>Clear Form</a>
+                            <a href='/companies' class='btn btn-secondary btn-lg'>Cancel</a>
                         </div>
                     </form>
                 </div>
