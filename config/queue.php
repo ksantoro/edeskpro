@@ -53,7 +53,7 @@ return [
             'key' => env('SQS_KEY', 'AKIAIWP4W3462H6T4RPA'),
             'secret' => env('SQS_SECRET', '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'),
             'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-2.amazonaws.com/899413643241'),
-            'queue' => env('SQS_QUEUE', 'eDeskProTasks'),
+            'queue' => env('SQS_QUEUE', 'eDeskProWorker'),
             'region' => env('SQS_REGION', 'us-east-2'),
         ],
 

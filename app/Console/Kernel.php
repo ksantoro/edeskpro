@@ -27,20 +27,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        Log::debug(' ----- Running Scheduled Tasks for Tenants ----- ');
+
         // Multi Tenant Tasks Runner
         //
         $tenants = Company::all();
 
         foreach ($tenants as $tenant) {
 
-            Log::debug(' ----- Running Scheduled Tasks for Tenant: ----- ');
             Log::debug(" Tenant -  {$tenant->name}, DB - {$tenant->database}");
 
             // Scheduled Tasks Per Tenant
             //
-            $schedule->call(function ($tenant) {
-                ContactNoAction::dispatchNow($tenant);
-            })->everyThirtyMinutes();
+            $schedule->job(new ContactNoAction($tenant))->everyFiveMinutes();
         }
     }
 

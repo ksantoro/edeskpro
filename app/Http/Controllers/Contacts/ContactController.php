@@ -45,7 +45,7 @@ class ContactController extends Controller
 
     public function index()
     {
-        $contacts = Contact::all();
+        $contacts = Contact::all()->sortByDesc('created_at');
 
         return view('contacts.index')
             ->with('contacts', $contacts)
@@ -184,7 +184,7 @@ class ContactController extends Controller
             }
         }
         catch (\Exception $exception) {
-            Log::debug($exception);
+            Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
         }
 
         // Activity Log
@@ -403,7 +403,7 @@ class ContactController extends Controller
                 }
             }
             catch (\Exception $exception) {
-                Log::debug($exception);
+                Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
             }
         }
 
@@ -435,7 +435,7 @@ class ContactController extends Controller
             }
         }
         catch (\Exception $exception) {
-            Log::debug($exception);
+            Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
         }
 
         return redirect()->route('contacts.show', [$contact->id]);
@@ -471,7 +471,7 @@ class ContactController extends Controller
             }
         }
         catch (\Exception $exception) {
-            Log::debug($exception);
+            Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
         }
 
         return redirect()->route('contacts.index');

@@ -79,18 +79,22 @@ class Contact extends TenantModel
     public function noActionTaken()
     {
         $noAction = [];
+        Log::debug(__METHOD__. ' Begin contact search...');
 
         try {
             if ($contacts = Contact::has('activityLog')->where('created_at', '>', Carbon::now()->subHours(1)->toDateTimeString())->get()) {
+                Log::debug(__METHOD__ . ' -- Contacts Found Created in the last hour --');
                 foreach ($contacts as $contact) {
+                    Log::debug(__METHOD__ . " - Contact: {$contact->first_name} {$contact->last_name}");
                     if (count(ActivityLog::contact($contact)->get()) <= 1) {
+                        Log::debug(__METHOD__ . " -- Contacts Found Created in the last hour with NO ACTIVITY --");
                         $noAction[] = $contact;
                     }
                 }
             }
         }
         catch (\Exception $exception) {
-            Log::debug(__METHOD__, $exception);
+            Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
         }
 
         return $noAction;
