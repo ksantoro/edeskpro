@@ -82,7 +82,9 @@ class Contact extends TenantModel
         Log::debug(__METHOD__. ' Begin contact search...');
 
         try {
-            if ($contacts = Contact::has('activityLog')->where('created_at', '>', Carbon::now()->subHours(1)->toDateTimeString())->get()) {
+            $contacts = Contact::with('activityLog')->where('created_at', '>', Carbon::now()->subHours(1)->toDateTimeString())->get();
+
+            if (count($contacts) > 0) {
                 Log::debug(__METHOD__ . ' -- Contacts Found Created in the last hour --');
                 foreach ($contacts as $contact) {
                     Log::debug(__METHOD__ . " - Contact: {$contact->first_name} {$contact->last_name}");

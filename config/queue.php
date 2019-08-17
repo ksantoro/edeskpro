@@ -35,34 +35,34 @@ return [
         ],
 
         'database' => [
-            'driver' => 'database',
-            'table' => 'jobs',
-            'queue' => 'default',
+            'driver'      => 'database',
+            'table'       => 'jobs',
+            'queue'       => 'default',
             'retry_after' => 90,
         ],
 
         'beanstalkd' => [
-            'driver' => 'beanstalkd',
-            'host' => 'localhost',
-            'queue' => 'default',
+            'driver'      => 'beanstalkd',
+            'host'        => 'localhost',
+            'queue'       => 'default',
             'retry_after' => 90,
         ],
 
         'sqs' => [
             'driver' => 'sqs',
-            'key' => env('SQS_KEY', 'AKIAIWP4W3462H6T4RPA'),
-            'secret' => env('SQS_SECRET', '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'),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-2.amazonaws.com/899413643241'),
-            'queue' => env('SQS_QUEUE', 'eDeskProWorker'),
-            'region' => env('SQS_REGION', 'us-east-2'),
+            'key'    => env('SQS_KEY', ''),
+            'secret' => env('SQS_SECRET', ''),
+            'prefix' => env('SQS_PREFIX', ''),
+            'queue'  => env('SQS_QUEUE', ''),
+            'region' => env('SQS_REGION', ''),
         ],
 
         'redis' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => 'default',
+            'driver'      => 'redis',
+            'connection'  => 'default',
+            'queue'       => 'default',
             'retry_after' => 90,
-            'block_for' => null,
+            'block_for'   => null,
         ],
 
     ],
