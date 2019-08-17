@@ -76,20 +76,26 @@ class Contact extends TenantModel
         return $query->where('contact_type_id', self::TYPE_CUSTOMER);
     }
 
+    public function scopeLastHour($query)
+    {
+        return $query->where('created_at', '>', Carbon::now()->subHours(1)->toDateTimeString());
+    }
+
+    public function scopeLast24Hours($query)
+    {
+        return $query->where('created_at', '>', Carbon::now()->subHours(24)->toDateTimeString());
+    }
+
     public function noActionTaken()
     {
         $noAction = [];
-        Log::debug(__METHOD__. ' Begin contact search...');
 
         try {
-            $contacts = Contact::with('activityLog')->where('created_at', '>', Carbon::now()->subHours(1)->toDateTimeString())->get();
+            $contacts = Contact::Last24Hours()->get();
 
             if (count($contacts) > 0) {
-                Log::debug(__METHOD__ . ' -- Contacts Found Created in the last hour --');
                 foreach ($contacts as $contact) {
-                    Log::debug(__METHOD__ . " - Contact: {$contact->first_name} {$contact->last_name}");
                     if (count(ActivityLog::contact($contact)->get()) <= 1) {
-                        Log::debug(__METHOD__ . " -- Contacts Found Created in the last hour with NO ACTIVITY --");
                         $noAction[] = $contact;
                     }
                 }

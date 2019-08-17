@@ -39,17 +39,12 @@ class ContactNoAction implements ShouldQueue
     public function handle()
     {
         tenant_connect($this->tenant->hostname, $this->tenant->username, $this->tenant->password, $this->tenant->database);
-        Log::debug(__METHOD__. " - Connected to tenant: {$this->tenant->name}");
 
         try {
             if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(7), NotificationSendType::find(2))) {
-                Log::debug(__METHOD__ . ' -- Users Found to Notify --');
                 foreach ($users_to_notify as $user_to_notify) {
-                    Log::debug(__METHOD__ . " - User: {$user_to_notify}");
                     if ($contacts = (new Contact())->noActionTaken()) {
-                        Log::debug(__METHOD__ . ' -- Contacts Found --');
                         foreach ($contacts as $contact) {
-                            Log::debug(__METHOD__ . " - Contact: {$contact->first_name} {$contact->last_name}");
                             Mail::to(User::find($user_to_notify))->send(new ContactNoActionNotification($contact, $this->tenant));
                         }
                     }
