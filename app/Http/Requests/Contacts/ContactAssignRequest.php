@@ -24,8 +24,8 @@ class ContactAssignRequest extends FormRequest
     public function rules()
     {
         return [
-            'contact_id'       => 'required|numeric|max:25',
-            'contact_owner_id' => 'required|numeric|max:25',
+            'contact_id'       => 'required|numeric',
+            'contact_owner_id' => 'required|numeric',
         ];
     }
 }
