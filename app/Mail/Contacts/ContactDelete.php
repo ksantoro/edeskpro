@@ -17,7 +17,6 @@ class ContactDelete extends Mailable
     public
         $company,
         $contact,
-        $updated,
         $title = 'Contact Deleted/Archived';
 
     /**
@@ -25,7 +24,7 @@ class ContactDelete extends Mailable
      *
      * @return void
      */
-    public function __construct(Contact $contact, $updated)
+    public function __construct(Contact $contact)
     {
         $this->company = Company::find(Auth::user()->company_id);
         $this->contact = $contact;
