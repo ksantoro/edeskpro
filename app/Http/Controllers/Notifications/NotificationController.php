@@ -55,7 +55,7 @@ class NotificationController extends Controller
         Log::debug($request);
 
         $validator = Validator::make($request->all(), [
-            'notification_type_id' => 'required|numeric|max:25',
+            'notification_type_id' => 'required|numeric',
             'users'                => 'required|array',
         ]);
 

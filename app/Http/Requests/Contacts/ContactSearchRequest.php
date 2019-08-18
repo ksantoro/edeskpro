@@ -24,7 +24,7 @@ class ContactSearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'search_term' => 'required|size:255'
+            'search_term' => 'required|max:255'
         ];
     }
 }
