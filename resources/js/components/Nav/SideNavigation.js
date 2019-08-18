@@ -60,7 +60,7 @@ class SideNavigation extends Component {
                             <li><a href='/opportunities'>Opportunities</a></li>
                             <li><a href='/customers'>Customers</a></li>
                             <li><a href='/contacts'>Contact Management</a></li>
-                            <li><a href='/archived'>Archive</a></li>
+                            <li><a href='/archived_contacts'>Archive</a></li>
                         </ul>
                     </li>
                     {showAdminItems}
