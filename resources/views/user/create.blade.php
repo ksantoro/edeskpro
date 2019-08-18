@@ -10,8 +10,8 @@
                     <div class='card'>
                         <div class='card-header'>User Information</div>
                         <div class='card-body'>
-                            <form id='create-new-user' name='create-new-user' action='{{ route('users.store') }}' method='POST'>
-                                {{ csrf_field() }}
+                            <form id='create-new-user' name='create-new-user' action='/users' method='POST'>
+                                @csrf
                                 <div class='row form-row'>
                                     <div class='col'>
                                         <div class='form-group'>

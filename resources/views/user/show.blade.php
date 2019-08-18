@@ -12,7 +12,7 @@
                 </div>
                 <div class='col-sm-4'>
                     <p class='float-right'>
-                        <a href='{{ route('users.edit', ['user' => $user]) }}'>Edit</a>
+                        <a href='/users/{{ $user->id }}/edit'>Edit</a>
                     </p>
                 </div>
             </div>

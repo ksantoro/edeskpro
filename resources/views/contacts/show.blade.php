@@ -13,6 +13,12 @@
          </div>
           <div class='col-sm-4'>
               <p class='float-right'>
+                  <a href='tel:{{ $contact->phone }}' title='Call {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'called')">
+                      <i class='fas fa-phone-square fa-2x px-1'></i>
+                  </a>
+                  <a href='mailto:{{ $contact->email }}' title='Email {{ $contact->first_name }}' onClick="log_contact_activity({{ $contact->id }}, 'emailed')">
+                      <i class='fas fa-envelope-square fa-2x px-1'></i>
+                  </a>
                   <a href='/contacts/{{ $contact->id }}/edit'>Edit</a> |
                   <a href='#' data-toggle='modal'
                      data-id='{{ $contact->id }}'

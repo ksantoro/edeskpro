@@ -30,36 +30,44 @@
 
              <div class='row'>
                  <div class='col'>
-                     <div class='card text-white bg-primary mb-3'>
-                         <div class='card-body'>
-                             <h4 class='card-title'>All Contacts</h4>
-                             <p class='card-text'><h1 class='float-right'>{{ $counts['all'] }}</h1></p>
+                     <a href='/contacts'>
+                         <div class='card text-white bg-primary mb-3'>
+                             <div class='card-body'>
+                                 <h4 class='card-title'>All Contacts</h4>
+                                 <p class='card-text'><h1 class='float-right'>{{ $counts['all'] }}</h1></p>
+                             </div>
                          </div>
-                     </div>
+                     </a>
                  </div>
                  <div class='col'>
-                     <div class='card text-white bg-secondary mb-3'>
-                         <div class='card-body'>
-                             <h4 class='card-title'>Leads</h4>
-                             <p class='card-text'><h1 class='float-right'>{{ $counts['leads'] }}</h1></p>
+                     <a href='/leads'>
+                         <div class='card text-white bg-secondary mb-3'>
+                             <div class='card-body'>
+                                 <h4 class='card-title'>Leads</h4>
+                                 <p class='card-text'><h1 class='float-right'>{{ $counts['leads'] }}</h1></p>
+                             </div>
                          </div>
-                     </div>
+                     </a>
                  </div>
                  <div class='col'>
-                     <div class='card text-white bg-success mb-3'>
-                         <div class='card-body'>
-                             <h4 class='card-title'>Opportunities</h4>
-                             <p class='card-text'><h1 class='float-right'>{{ $counts['opps'] }}</h1></p>
+                     <a href='/opportunities'>
+                         <div class='card text-white bg-success mb-3'>
+                             <div class='card-body'>
+                                 <h4 class='card-title'>Opportunities</h4>
+                                 <p class='card-text'><h1 class='float-right'>{{ $counts['opps'] }}</h1></p>
+                             </div>
                          </div>
-                     </div>
+                     </a>
                  </div>
                  <div class='col'>
-                     <div class='card text-white bg-info mb-3'>
-                         <div class='card-body'>
-                             <h4 class='card-title'>Customers</h4>
-                             <p class='card-text'><h1 class='float-right'>{{ $counts['customers'] }}</h1></p>
+                     <a href='/customers'>
+                         <div class='card text-white bg-info mb-3'>
+                             <div class='card-body'>
+                                 <h4 class='card-title'>Customers</h4>
+                                 <p class='card-text'><h1 class='float-right'>{{ $counts['customers'] }}</h1></p>
+                             </div>
                          </div>
-                     </div>
+                     </a>
                  </div>
              </div>
 

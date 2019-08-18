@@ -7,8 +7,8 @@
         <div class='container-fluid'>
             <div class='row justify-content-center'>
                 <div class='col-md-12'>
-                    <form id='create-new-notification' name='create-new-notification' action='{{ route('notifications.store') }}' method='POST'>
-                    {{ csrf_field() }}
+                    <form id='create-new-notification' name='create-new-notification' action='/notifications' method='POST'>
+                    @csrf
                     <!-- company info -->
                         <div class='card'>
                             <div class='card-header'>Set Up New Custom Notification</div>

@@ -10,7 +10,7 @@
             <div class='card'>
                <div class='card-header'>Edit {{ $contact->first_name }} {{ $contact->last_name }}</div>
                <div class='card-body'>
-                  <form id='edit-contact' name='edit-contact' action='/contacts/{{ $contact->i }}' method='POST'>
+                  <form id='edit-contact' name='edit-contact' action='/contacts/{{ $contact->id }}' method='POST'>
                      @csrf
                      {{ method_field('PUT') }}
                      <div class='row form-row'>

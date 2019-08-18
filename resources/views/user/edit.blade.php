@@ -10,8 +10,8 @@
                     <div class='card'>
                         <div class='card-header'>User Information</div>
                         <div class='card-body'>
-                            <form id='edit-user' name='edit-user' action='{{ route('users.update', $user->id) }}' method='POST'>
-                                {{ csrf_field() }}
+                            <form id='edit-user' name='edit-user' action='/users/{{ $user->id }}' method='POST'>
+                                @csrf
                                 {{ method_field('PUT') }}
                                 <div class='row form-row'>
                                     <div class='col'>
@@ -92,7 +92,7 @@
                     <div class='form-group'>
                         <input type='submit' value='Edit User' class='btn btn-primary btn-lg'>
                         <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
-                        <a href='{{ URL::to('users') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+                        <a href="/users/{{ $user->id }}" class='btn btn-secondary btn-lg'>Cancel</a>
                     </div>
                     </form>
                 </div>

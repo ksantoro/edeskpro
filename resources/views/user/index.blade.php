@@ -6,7 +6,7 @@
         <div class='container-fluid'>
             <div class='d-flex flex-row'>
                 <div class='p-2'>
-                    <a href='{{ route('users.create') }}' class='btn btn-primary'>Create New</a>
+                    <a href='/users/create' class='btn btn-primary'>Create New</a>
                 </div>
                 <div class='p-2 flex-grow-1'>
                     <!-- Search box -->
@@ -21,7 +21,7 @@
                     </form>
                 </div>
                 <div class='p-2'>
-                    <a href='{{ route('users.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
+                    <a href='/users' class='btn btn-secondary float-right'>Clear Search</a>
                 </div>
             </div>
             <div class='row justify-content-center'>
@@ -74,7 +74,7 @@
 
                                 @foreach ($users as $user)
                                     <div class='col-md-4 contact-card'>
-                                        <div class='card'>
+                                        <div class='card mt-3'>
                                             <div class='card-header'>
 
                                                 <div class='row justify-content-end'>

@@ -7,7 +7,7 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-md-1'>
-                <a href='{{ route('notifications.create') }}' class='btn btn-primary'>Create New</a>
+                <a href='/notifications/create' class='btn btn-primary'>Create New</a>
             </div>
             <div class='col-md-10'>
                 <!-- Search box -->
@@ -22,7 +22,7 @@
                 </form>
             </div>
             <div class='col-md-1'>
-                <a href='{{ route('notifications.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
+                <a href='/notifications' class='btn btn-secondary float-right'>Clear Search</a>
             </div>
         </div>
 

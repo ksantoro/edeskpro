@@ -41,6 +41,7 @@ $(document).ready(function () {
                     if (response.valid !== 'undefined') {
                         if (response.valid == true) {
                             $('#contact-assign-success').append(response.message).removeClass('d-none');
+                            location.reload();
                         }
                         else {
                             $('#contact-assign-fail').append(response.message).removeClass('d-none');
