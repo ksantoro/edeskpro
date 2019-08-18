@@ -45,23 +45,23 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root'   => storage_path('app'),
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'driver'     => 'local',
+            'root'       => storage_path('app/public'),
+            'url'        => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
+            'key'    => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => 'elasticbeanstalk-us-east-2-899413643241',
-            'url' => 'https://s3.us-east-2.amazonaws.com/elasticbeanstalk-us-east-2-899413643241/resources/',
+            'bucket' => env('AWS_BUCKET'),
+            'url'    => env('AWS_URL'),
         ],
 
     ],

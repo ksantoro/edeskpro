@@ -83,7 +83,7 @@ class Contact extends TenantModel
 
     public function scopeLast24Hours($query)
     {
-        return $query->where('created_at', '>', Carbon::now()->subHours(24)->toDateTimeString());
+        return $query->where('created_at', '>', Carbon::now()->subDay()->toDateTimeString());
     }
 
     public function noActionTaken()

@@ -88,9 +88,8 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME', 'AKIA5C2J3B7U6YCEH37I'),
-
-    'password' => env('MAIL_PASSWORD', 'BBLbR8YmmoRu22fSoWDUkNfgWSwBO9HBNwoKLSe71d5b'),
+    'username' => env('MAIL_USERNAME', ''),
+    'password' => env('MAIL_PASSWORD', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -118,7 +117,6 @@ return [
 
     'markdown' => [
         'theme' => 'default',
-
         'paths' => [
             resource_path('views/vendor/mail'),
         ],
