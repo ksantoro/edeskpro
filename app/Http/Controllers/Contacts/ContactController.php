@@ -412,6 +412,10 @@ class ContactController extends Controller
 
     public function assign(ContactAssignRequest $request)
     {
+        $return  = [
+            'message' => 'There was an error assigning lead.',
+            'valid'   => false,
+        ];
         $valid   = $request->validated();
         $contact = Contact::find($valid['contact_id']);
         $user    = User::find($valid['contact_owner_id']);
@@ -433,12 +437,17 @@ class ContactController extends Controller
                     Mail::to(User::find($user_to_notify))->send(new ContactUpdate($contact, $updated));
                 }
             }
+
+            $return  = [
+                'message' => "{$contact->first_name} {$contact->last_name} was successfully assigned to {$user->first_name} {$user->last_name}",
+                'valid'   => true,
+            ];
         }
         catch (\Exception $exception) {
             Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
         }
 
-        return redirect()->route('contacts.show', [$contact->id]);
+        return $return;
     }
 
     /**

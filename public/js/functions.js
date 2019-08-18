@@ -16,7 +16,9 @@ $(document).ready(function () {
     });
 
     $('#assign_contact_modal_form').on('submit', function(e){
-        alert('im submitted');
+        e.preventDefault();
+        $('#contact-assign-success').empty().addClass('d-none');
+        $('#contact-assign-fail').empty().addClass('d-none');
         var contact_id = $('input[name="contact_id"]').val();
         var owner_id   = $('select[name="contact_owner_id"]').val();
 
@@ -37,11 +39,16 @@ $(document).ready(function () {
                 }
             })
             .done(function(response) {
-                location.reload();
+                if (response.valid !== 'undefined') {
+                    if (response.valid == true) {
+                        $('#contact-assign-success').append(response.message).removeClass('d-none');
+                    }
+                    else {
+                        $('#contact-assign-fail').append(response.message).removeClass('d-none');
+                    }
+                }
             });
         }
-
-        e.preventDefault();
     });
 
     // Hide/Show Password/Password Confirm

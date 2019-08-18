@@ -52,7 +52,8 @@
                        Unknown
                    @endif
                    <br>
-                  <b>Contact Type:</b> {{ $contact_type->name }}
+                   <b>Contact Type:</b> {{ $contact_type->name }} <br>
+                   <b>Created:</b> {{ $contact->created_at->format('m/d/Y g:i A') }}
                </div>
             </div>
          </div>
@@ -200,6 +201,8 @@
                 </button>
             </div>
             <div class='modal-body'>
+                <div class='alert alert-success d-none' id='contact-assign-success' role='alert'></div>
+                <div class='alert alert-danger d-none' id='contact-assign-fail' role='alert'></div>
                 <form id='assign_contact_modal_form' method='POST' action='#'>
                     <input type='hidden' name='contact_id' value='{{ $contact->id }}'>
                     <div class='form-group'>
@@ -227,7 +230,7 @@
                 </form>
             </div>
             <div class='modal-footer'>
-                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                <button type='button' class='btn btn-secondary' data-dismiss='modal' onClick="location.reload()">Close</button>
                 <button type='submit' class='btn btn-primary' id='assign_contact_modal_save_button'>Save</button>
             </div>
         </div>
