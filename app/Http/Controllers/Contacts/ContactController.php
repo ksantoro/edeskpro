@@ -7,6 +7,7 @@ use App\Http\Requests\Contacts\ContactAssignRequest;
 use App\Http\Requests\Contacts\ContactSearchRequest;
 use App\Http\Requests\Contacts\ContactStoreRequest;
 use App\Http\Requests\Contacts\ContactUpdateRequest;
+use App\Mail\Contacts\ContactAssigned;
 use App\Mail\Contacts\ContactCreate;
 use App\Mail\Contacts\ContactUpdate;
 use App\Mail\Contacts\ContactDelete;
@@ -441,22 +442,25 @@ class ContactController extends Controller
             'message' => 'There was an error assigning lead.',
             'valid'   => false,
         ];
-        $valid   = $request->validated();
-        $contact = Contact::find($valid['contact_id']);
-        $user    = User::find($valid['contact_owner_id']);
-        $contact->contact_owners()->detach();
-        $contact->contact_owners()->attach($valid['contact_owner_id']);
 
-        // Activity Log
-        //
-        $log            = new ContactActivityLog();
-        $log->entity_id = $contact->id;
-        $log->note      = $updated[] = "Contact assigned to {$user->first_name} {$user->last_name}";
-        $log->save();
-
-        // Notification
-        //
         try {
+            $valid   = $request->validated();
+            $contact = Contact::find($valid['contact_id']);
+            $user    = User::find($valid['contact_owner_id']);
+            $contact->contact_owners()->detach();
+            $contact->contact_owners()->attach($valid['contact_owner_id']);
+
+            // Activity Log
+            //
+            $log            = new ContactActivityLog();
+            $log->entity_id = $contact->id;
+            $log->note      = $updated[] = "Contact assigned to {$user->first_name} {$user->last_name}";
+            $log->save();
+
+            // Notifications
+            //
+            Mail::to($user)->send(new ContactAssigned($contact));
+
             if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(2), NotificationSendType::find(2))) {
                 foreach ($users_to_notify as $user_to_notify) {
                     Mail::to(User::find($user_to_notify))->send(new ContactUpdate($contact, $updated));
