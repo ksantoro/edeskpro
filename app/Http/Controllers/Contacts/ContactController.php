@@ -10,6 +10,7 @@ use App\Http\Requests\Contacts\ContactUpdateRequest;
 use App\Mail\Contacts\ContactCreate;
 use App\Mail\Contacts\ContactUpdate;
 use App\Mail\Contacts\ContactDelete;
+use App\Models\Main\EntityType;
 use App\Models\Tenant\Activity\ActivityLog;
 use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\Tenant\Contact;
@@ -23,8 +24,10 @@ use App\Models\Main\NotificationType;
 use App\Models\Main\States;
 use App\Models\Tenant\NotificationUser;
 use App\Models\Main\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -189,17 +192,39 @@ class ContactController extends Controller
 
         // Activity Log
         //
-        $log            = new ContactActivityLog();
-        $log->entity_id = $contact->id;
-        $log->note      = 'Contact created in the system';
-        $log->save();
-
-        if ($valid['contact_owner_id']) {
-            $owner          = User::find($valid['contact_owner_id']);
+        try {
             $log            = new ContactActivityLog();
             $log->entity_id = $contact->id;
-            $log->note      = "Contact assigned to owner: {$owner->first_name} {$owner->last_name}";
+            $log->note      = 'Contact created in the system';
             $log->save();
+
+            if ($valid['contact_owner_id']) {
+                $owner          = User::find($valid['contact_owner_id']);
+                $log            = new ContactActivityLog();
+                $log->entity_id = $contact->id;
+                $log->note      = "Contact assigned to owner: {$owner->first_name} {$owner->last_name}";
+                $log->save();
+            }
+        }
+        catch(\Exception $e) {
+            Log::debug(__METHOD__. ' Error - ' . $e->getMessage());
+        }
+
+        // Notes
+        //
+        if (! empty($valid['notes'])) {
+            try {
+                $note                 = new Notes();
+                $note->entity_type_id = EntityType::CONTACT;
+                $note->entity_id      = $contact->id;
+                $note->note           = $valid['notes'];
+                $note->user_id        = Auth::user()->id;
+                $note->created_at     = Carbon::now();
+                $note->save();
+            }
+            catch(\Exception $e) {
+                Log::debug(__METHOD__. ' Error - ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('contacts.show', [$contact->id]);

@@ -46,6 +46,7 @@ class ContactStoreRequest extends FormRequest
             'delivery_city'         => 'required|max:255',
             'delivery_state'        => 'required|max:255',
             'delivery_zip'          => 'required|max:255',
+            'notes'                 => 'nullable|max:255',
         ];
     }
 

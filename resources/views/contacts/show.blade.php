@@ -104,8 +104,8 @@
        </div>
 
         <!-- Activity & Notes -->
-        <div class='row mt-3'>
-            <div class='col-sm-6'>
+        <div class='row'>
+            <div class='col-sm-6  mt-3'>
                 <div class='card'>
                 <div class='card-header'>Notes</div>
                     <div class='card-body'>
@@ -152,7 +152,7 @@
                     </div>
                 </div>
             </div>
-            <div class='col-sm-6'>
+            <div class='col-sm-6 mt-3'>
                <div class='card'>
                    <div class='card-header'>Activity</div>
                    <div class='card-body'>

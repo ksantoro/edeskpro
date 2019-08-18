@@ -308,6 +308,24 @@
                   </div>
                </div>
             </div>
+             <br>
+             <!-- Initial Note -->
+             <div class='card mt-3'>
+                 <div class='card-header'>Notes</div>
+                 <div class='card-body'>
+                     <div class='row form-row'>
+                         <div class='col'>
+                             <div class='form-group'>
+                                 <label for='notes'>Example textarea</label>
+                                 <textarea class='form-control' id='notes' name='notes' rows='3' value='{{ old('notes') }}'></textarea>
+                                 @if ($errors->has('notes'))
+                                     <div class='alert alert-danger mt-1'>{{ $errors->first('notes') }}</div>
+                                 @endif
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
             <br>
             <div class='form-group'>
                <input type='submit' value='Save New Contact' class='btn btn-primary btn-lg'>
