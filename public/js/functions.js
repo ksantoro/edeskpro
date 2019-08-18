@@ -36,16 +36,19 @@ $(document).ready(function () {
                 data: {
                     contact_id :       contact_id,
                     contact_owner_id : owner_id
-                }
-            })
-            .done(function(response) {
-                if (response.valid !== 'undefined') {
-                    if (response.valid == true) {
-                        $('#contact-assign-success').append(response.message).removeClass('d-none');
+                },
+                success : function(response) {
+                    if (response.valid !== 'undefined') {
+                        if (response.valid == true) {
+                            $('#contact-assign-success').append(response.message).removeClass('d-none');
+                        }
+                        else {
+                            $('#contact-assign-fail').append(response.message).removeClass('d-none');
+                        }
                     }
-                    else {
-                        $('#contact-assign-fail').append(response.message).removeClass('d-none');
-                    }
+                },
+                error : function(data){
+                    console.log(data);
                 }
             });
         }
@@ -162,10 +165,14 @@ function add_contact_note(contact_id = 0, note = '')
                 entity_type_id : 3,
                 entity_id      : contact_id,
                 note           : note
+            },
+            success : function(response) {
+                console.log(response);
+                location.reload(true);
+            },
+            error : function(data){
+                console.log(data);
             }
-        }).done(function(response) {
-            console.log(response);
-            location.reload(true);
         });
     }
 }

@@ -62,7 +62,6 @@ class NotesController extends Controller
         else {
             Log::debug(__METHOD__. ' - Note entry failed validation with the following errors', (array) $valid->errors());
         }
-
     }
 
     /**

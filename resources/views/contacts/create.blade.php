@@ -316,7 +316,7 @@
                      <div class='row form-row'>
                          <div class='col'>
                              <div class='form-group'>
-                                 <label for='notes'>Example textarea</label>
+                                 <label for='notes'>Notes</label>
                                  <textarea class='form-control' id='notes' name='notes' rows='3' value='{{ old('notes') }}'></textarea>
                                  @if ($errors->has('notes'))
                                      <div class='alert alert-danger mt-1'>{{ $errors->first('notes') }}</div>
