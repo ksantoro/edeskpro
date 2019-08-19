@@ -21,7 +21,7 @@
                                                 @if (isset($user_types))
                                                     @foreach ($user_types as $type)
                                                         <option value='{{ $type->id }}'
-                                                                @if ($type->id == $user->type_id)
+                                                            @if ($type->id == $user->type_user_id)
                                                                 selected='selected'
                                                             @endif
                                                         >{{ $type->description }}</option>
@@ -66,7 +66,7 @@
                                 </div>
                                 <div class='row form-row'>
                                     <div class='col'>
-                                        <button class='btn btn-alert btn-lg float-right' onclick="alert('Cant reset yet'); return false;">Reset Password</button>
+                                        <a class='btn btn-secondary btn-lg float-right' href='/password/reset'>Reset Password</a>
                                     </div>
                                 </div>
                             </div>

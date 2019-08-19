@@ -22,7 +22,11 @@
                                             <option value=''>Unassigned</option>
                                             @if (isset($contact_owners))
                                                 @foreach ($contact_owners as $owner)
-                                                    <option value='{{ $owner->id }}'>{{ $owner->first_name }} {{ $owner->last_name }}</option>
+                                                    <option value='{{ $owner->id }}'
+                                                            @if ($owner->id == old('contact_owner_id'))
+                                                            selected='selected'
+                                                        @endif
+                                                    >{{ $owner->first_name }} {{ $owner->last_name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -38,7 +42,11 @@
                                             <option value=''>Unknown</option>
                                             @if (isset($contact_sources))
                                                 @foreach ($contact_sources as $source)
-                                                    <option value='{{ $source->id }}'>{{ $source->name }} - {{ $source->description }}</option>
+                                                    <option value='{{ $source->id }}'
+                                                            @if ($source->id == old('contact_source'))
+                                                            selected='selected'
+                                                        @endif
+                                                    >{{ $source->name }} - {{ $source->description }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -66,7 +74,11 @@
                                         <select class='form-control' name='contact_type_id'>
                                             @if (isset($contact_types))
                                                 @foreach ($contact_types as $type)
-                                                    <option value='{{ $type->id }}'>{{ $type->name }}</option>
+                                                    <option value='{{ $type->id }}'
+                                                        @if ($type->id == old('contact_type_id'))
+                                                            selected='selected'
+                                                        @endif
+                                                    >{{ $type->name }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -116,7 +128,11 @@
                               <select class='form-control' name='phone_type_id'>
                                  @if (isset($contact_method_types))
                                     @foreach ($contact_method_types as $method_type)
-                                       <option value='{{ $method_type->id }}'>{{ $method_type->name }}</option>
+                                      <option value='{{ $method_type->id }}'
+                                          @if ($method_type->id == old('phone_type_id'))
+                                              selected='selected'
+                                          @endif
+                                      >{{ $method_type->name }}</option>
                                     @endforeach
                                  @endif
                               </select>
@@ -140,7 +156,11 @@
                               <select class='form-control' name='email_type_id'>
                                  @if (isset($contact_method_types))
                                     @foreach ($contact_method_types as $method_type)
-                                       <option value='{{ $method_type->id }}'>{{ $method_type->name }}</option>
+                                      <option value='{{ $method_type->id }}'
+                                          @if ($method_type->id == old('email_type_id'))
+                                              selected='selected'
+                                          @endif
+                                      >{{ $method_type->name }}</option>
                                     @endforeach
                                  @endif
                               </select>
@@ -169,7 +189,11 @@
                             <select class='form-control' name='billing_address_type'>
                             @if (isset($contact_method_types))
                                 @foreach ($contact_method_types as $method_type)
-                                    <option value='{{ $method_type->id }}'>{{ $method_type->name }}</option>
+                                    <option value='{{ $method_type->id }}'
+                                        @if ($method_type->id == old('billing_address_type'))
+                                            selected='selected'
+                                        @endif
+                                    >{{ $method_type->name }}</option>
                                 @endforeach
                             @endif
                             </select>
@@ -211,8 +235,7 @@
                                              @if (old('billing_state') == $state->code)
                                              selected='selected'
                                              @endif
-                                         >
-                                             {{ $state->code }} - {{ $state->name }}
+                                         >{{ $state->code }} - {{ $state->name }}
                                          </option>
                                      @endforeach
                                  </select>
@@ -242,7 +265,11 @@
                             <select class='form-control' name='delivery_address_type'>
                                 @if (isset($contact_method_types))
                                     @foreach ($contact_method_types as $method_type)
-                                        <option value='{{ $method_type->id }}'>{{ $method_type->name }}</option>
+                                        <option value='{{ $method_type->id }}'
+                                            @if ($method_type->id == old('delivery_address_type'))
+                                                selected='selected'
+                                            @endif
+                                        >{{ $method_type->name }}</option>
                                     @endforeach
                                 @endif
                             </select>

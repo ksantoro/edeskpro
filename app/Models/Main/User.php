@@ -12,6 +12,18 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const
+        SUPER      = 1,
+        ADMIN      = 2,
+        TECH       = 3,
+        CSR        = 4,
+        SALES      = 5,
+        SALES_MGR  = 6,
+        FIELD_TECH = 7,
+        FOREMAN    = 8,
+        MARKETING  = 9,
+        FINANCE    = 10;
+
     protected $connection = 'main';
 
     /**

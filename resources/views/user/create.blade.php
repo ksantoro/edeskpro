@@ -19,7 +19,11 @@
                                             <select class='form-control' name='user_type_id'>
                                                 @if (isset($user_types))
                                                     @foreach ($user_types as $type)
-                                                        <option value='{{ $type->id }}'>{{ $type->description }}</option>
+                                                        <option value='{{ $type->id }}'
+                                                            @if ($type->id == old('user_type_id'))
+                                                                selected='selected'
+                                                            @endif
+                                                        >{{ $type->description }}</option>
                                                     @endforeach
                                                 @endif
                                             </select>
