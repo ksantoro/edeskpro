@@ -37,20 +37,50 @@
 
                         <div class='card-body'>
 
-                            @if (! empty($roles))
+                            @if (! empty($parents))
 
-                                @foreach ($roles as $role)
+                                <div class='row'>
 
-                                    @if (in_array($role->id, $user_roles))
-                                        <i class='far fa-check-circle text-success'></i>
-                                    @else
-                                        <i class='far fa-times-circle text-danger'></i>
-                                    @endif
+                                @foreach ($parents as $parent)
 
-                                    {{ $role->name }} - {{ $role->description }} <br>
+                                    <div class='col col-auto pr-5'>
+                                        <h4>{{ $parent->name }}</h4>
+
+                                        @if (! empty($roles))
+
+                                            <ul style='list-style: none; padding-left: 0;'>
+
+                                            @foreach ($roles as $role)
+
+                                                @if ($role->parent_id == $parent->id)
+
+                                                    <li>
+                                                        @if (in_array($role->id, $user_roles))
+                                                            <i class='far fa-check-circle text-success'></i>
+                                                        @else
+                                                            <i class='far fa-times-circle text-danger'></i>
+                                                        @endif
+                                                        {{ $role->name }}
+                                                        <small>
+                                                            <i title='{{ $role->description }}' class='fas fa-question-circle text-secondary' data-toggle='tooltip' data-placement='right'></i>
+                                                        </small>
+                                                    </li>
+
+                                                @endif
+
+                                            @endforeach
+
+                                            </ul>
+                                        @else
+
+                                            There are no roles to display.
+
+                                        @endif
+                                    </div>
 
                                 @endforeach
 
+                                </div>
                             @else
 
                                 There are no roles to display.

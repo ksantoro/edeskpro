@@ -112,7 +112,8 @@ class UserController extends Controller
 
     public function show($id)
     {
-         $roles      = Role::all();
+         $roles      = Role::Configurable()->get();
+         $parents    = Role::Parent()->get();
          $user       = User::find($id);
          $user_roles = [];
 
@@ -121,6 +122,7 @@ class UserController extends Controller
          }
 
          return view('user.show', [
+             'parents'    => $parents,
              'roles'      => $roles,
              'user'       => $user,
              'user_roles' => $user_roles,
@@ -131,8 +133,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return view('user.edit', [
+            'parents'           => Role::Parent()->get(),
+            'roles'             => Role::Configurable()->get(),
             'user'              => $user,
-            'roles'             => Role::all(),
             'user_method_types' => ContactMethodType::all(),
             'user_types'        => UserType::AllTypes()->get(),
         ]);

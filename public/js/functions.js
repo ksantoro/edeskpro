@@ -192,7 +192,7 @@ function find_users_by_notification_type()
 
     $.ajax({
         method: 'POST',
-        url:    'find_users',
+        url:    '/notifications/find_users',
         data: { notification_type_id : notification_type_id }
     })
     .done(function( response ) {

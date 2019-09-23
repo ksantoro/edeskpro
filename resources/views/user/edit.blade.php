@@ -77,22 +77,61 @@
                         <div class='card-header'>User Permissions & Roles</div>
                         <div class='card-body'>
 
-                            @foreach($roles as $role)
+                            @if (! empty($parents))
 
-                                <div class='form-check'>
-                                    <input type='checkbox' class='form-check-input' name='role_user[{{ $role->id }}]' {{ $user->hasRole($role->id) ? 'checked' : ''}}>
-                                    <label class='form-check-label' for='exampleCheck1'>{{ $role->name }} - {{ $role->description }}</label>
+                                <div class='row'>
+
+                                    @foreach ($parents as $parent)
+
+                                        <div class='col col-auto pr-5'>
+                                            <h4>{{ $parent->name }}</h4>
+
+                                            @if (! empty($roles))
+
+                                                <ul style='list-style: none; padding-left: 0;'>
+
+                                                    @foreach ($roles as $role)
+
+                                                        @if ($role->parent_id == $parent->id)
+
+                                                            <div class='form-check'>
+                                                                <input type='checkbox' class='form-check-input' name='role_user[{{ $role->id }}]' {{ $user->hasRole($role->id) ? 'checked' : ''}}>
+                                                                <label class='form-check-label' for='exampleCheck1'>
+                                                                    {{ $role->name }}
+                                                                    <small>
+                                                                        <i title='{{ $role->description }}' class='fas fa-question-circle text-secondary' data-toggle='tooltip' data-placement='right'></i>
+                                                                    </small>
+                                                                </label>
+                                                            </div>
+
+                                                        @endif
+
+                                                    @endforeach
+
+                                                </ul>
+                                                <button type='button' class='btn btn-secondary btn-sm'>Check All</button>
+                                            @else
+
+                                                There are no roles to display.
+
+                                            @endif
+                                        </div>
+
+                                    @endforeach
+
                                 </div>
+                            @else
 
-                            @endforeach
+                                There are no roles to display.
+
+                            @endif
 
                         </div>
                     </div>
                     <br>
                     <div class='form-group'>
-                        <input type='submit' value='Edit User' class='btn btn-primary btn-lg'>
-                        <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
-                        <a href="/users/{{ $user->id }}" class='btn btn-secondary btn-lg'>Cancel</a>
+                        <input type='submit' value='Save' class='btn btn-primary'>
+                        <a href="/users/{{ $user->id }}" class='btn btn-secondary'>Cancel</a>
                     </div>
                     </form>
                 </div>

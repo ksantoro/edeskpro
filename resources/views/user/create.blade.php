@@ -98,9 +98,9 @@
                         </div>
                     <br>
                     <div class='form-group'>
-                        <input type='submit' value='Save New User' class='btn btn-primary btn-lg'>
-                        <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
-                        <a href='{{ URL::to('users') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+                        <input type='submit' value='Save New User' class='btn btn-primary'>
+                        <a href='#' class='btn btn-success' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
+                        <a href='{{ URL::to('users') }}' class='btn btn-secondary'>Cancel</a>
                     </div>
                     </form>
                 </div>
