@@ -2,8 +2,8 @@
 
 namespace App\Models\Tenant\Activity;
 
-use App\Models\Tenant\Contact;
 use App\Models\Main\EntityType;
+use App\Models\Tenant\Contact;
 use App\Models\TenantModel;
 
 class ActivityLog extends TenantModel

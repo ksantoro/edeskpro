@@ -37,19 +37,19 @@ Route::resource('companies', 'Company\CompanyController');
 //
 Route::name('contacts.')->group(function() {
     Route::namespace('Contacts')->group(function() {
+        Route::post('contacts/assign',        'ContactController@assign')->name('assign');
+        Route::post('contacts/search',        'ContactController@search')->name('search');
         Route::get('contacts',                'ContactController@index')->name('index');
         Route::get('contacts/create',         'ContactController@create')->name('create')->middleware('tenant', 'roles:9');
         Route::post('contacts',               'ContactController@store')->name('store')->middleware('tenant', 'roles:9');
         Route::get('contacts/{contact}',      'ContactController@show')->name('show')->middleware('tenant', 'roles:11');
         Route::get('contacts/{contact}/edit', 'ContactController@edit')->name('edit')->middleware('tenant', 'roles:12');
         Route::put('contacts/{contact}',      'ContactController@update')->name('update')->middleware('tenant', 'roles:12');
-        Route::delete('contacts/{contact}',   'ContactController@destory')->name('destroy')->middleware('tenant', 'roles:14');
+        Route::delete('contacts/{contact}',   'ContactController@destroy')->name('destroy')->middleware('tenant', 'roles:14');
         Route::get('leads',                   'ContactController@leads')->name('leads')->middleware('tenant', 'roles:11');
         Route::get('opportunities',           'ContactController@opportunities')->name('opportunities')->middleware('tenant', 'roles:11');
         Route::get('customers',               'ContactController@customers')->name('customers')->middleware('tenant', 'roles:11');
         Route::get('archived_contacts',       'ContactController@archived_contacts')->name('archived')->middleware('tenant', 'roles:14');
-        Route::post('contacts/assign',        'ContactController@assign')->name('assign');
-        Route::post('contacts/search',        'ContactController@search')->name('search');
     });
 });
 
@@ -79,7 +79,7 @@ Route::name('users.')->group(function() {
         Route::get('users/{user}',          'UserController@show')->name('show')->middleware('tenant', 'roles:18');
         Route::get('users/{user}/edit',     'UserController@edit')->name('edit')->middleware('tenant', 'roles:19');
         Route::put('users/{user}',          'UserController@update')->name('update')->middleware('tenant', 'roles:19');
-        Route::delete('users/{user}',       'UserController@destory')->name('destroy')->middleware('tenant', 'roles:21');
+        Route::delete('users/{user}',       'UserController@destroy')->name('destroy')->middleware('tenant', 'roles:21');
         Route::get('users/{user}/profile/', 'UserController@profile')->name('profile');
         Route::get('users/{user}/settings', 'UserController@settings')->name('settings');
     });
