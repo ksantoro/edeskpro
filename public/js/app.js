@@ -81181,7 +81181,7 @@ var SideNavigation = function (_Component) {
                                 null,
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'a',
-                                    { href: '/archived' },
+                                    { href: '/archived_contacts' },
                                     'Archive'
                                 )
                             )
