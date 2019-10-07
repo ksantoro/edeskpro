@@ -26,7 +26,7 @@ class NoteStoreRequest extends FormRequest
         return [
             'entity_type_id' => 'required|numeric',
             'entity_id'      => 'required|numeric',
-            'note'           => 'required|max:255'
+            'note'           => 'required|max:1000'
         ];
     }
 

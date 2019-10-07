@@ -343,11 +343,22 @@
                      <div class='row form-row'>
                          <div class='col'>
                              <div class='form-group'>
-                                 <label for='notes'>Notes</label>
-                                 <textarea class='form-control' id='notes' name='notes' rows='3'>{{ old('notes') }}</textarea>
+                                 <label for='notes'>Notes <small>(Maximum characters: 1000)</small></label>
+                                 <textarea
+                                     class='form-control'
+                                     id='notes'
+                                     name='notes'
+                                     rows='3'
+                                     maxlength='1000'
+                                     onKeyDown="limit_text(this.form.notes, this.form.countdown, 1000);"
+                                     onKeyUp="limit_text(this.form.notes, this.form.countdown, 1000);"
+                                     placeholder='Add Note (Maximum Characters: 1000)'
+                                 >{{ old('notes') }}</textarea>
                                  @if ($errors->has('notes'))
                                      <div class='alert alert-danger mt-1'>{{ $errors->first('notes') }}</div>
                                  @endif
+                                 <br>
+                                 <small>You have <input readonly type='text' name='countdown' size='3' value='1000' style='border:0;color:#00cccc;text-align:center;'> characters left.</small>
                              </div>
                          </div>
                      </div>

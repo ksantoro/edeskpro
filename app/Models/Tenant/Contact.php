@@ -96,7 +96,7 @@ class Contact extends TenantModel
             if (count($contacts) > 0) {
                 foreach ($contacts as $contact) {
                     if (count(ActivityLog::contact($contact)->get()) <= 1) {
-                        if (count(Notes::contact($contact)->get()) < 1) {
+                        if (count(Notes::contact($contact)->get()) <= 1) {
                             $noAction[] = $contact;
                         }
                     }

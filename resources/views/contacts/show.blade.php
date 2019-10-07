@@ -121,7 +121,17 @@
                                     {{ csrf_field() }}
                                     <input type='hidden' name='contact_id' value='{{ $contact->id }}'>
                                     <div class='form-group'>
-                                        <input type='text' class='form-control' id='note' name='note' placeholder='Add note...'>
+                                        <textarea
+                                            class='form-control'
+                                            id='note'
+                                            name='note'
+                                            rows='3'
+                                            maxlength='1000'
+                                            onKeyDown="limit_text(this.form.note, this.form.countdown, 1000);"
+                                            onKeyUp="limit_text(this.form.note, this.form.countdown, 1000);"
+                                            placeholder='Add Note (Maximum Characters: 1000)'
+                                        ></textarea>
+                                        <small>You have <input readonly type='text' name='countdown' size='3' value='1000' style='border:0;color:#00cccc;text-align:center;'> characters left.</small>
                                     </div>
                                 </form>
                             </div>

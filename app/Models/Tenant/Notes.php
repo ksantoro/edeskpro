@@ -19,7 +19,7 @@ class Notes extends TenantModel
             'created_at',
         ];
 
-    public function scopeForContacts($query)
+    public function scopeContacts($query)
     {
         return $query->where('entity_type_id', EntityType::CONTACT);
     }
@@ -29,7 +29,7 @@ class Notes extends TenantModel
         return $query->where('entity_type_id', EntityType::CONTACT)->where('entity_id', $contact->id);
     }
 
-    public function scopeForUsers($query)
+    public function scopeUsers($query)
     {
         return $query->where('entity_type_id', EntityType::USER);
     }
