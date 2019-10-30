@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Contacts;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contacts\ContactAssignRequest;
+use App\Http\Requests\Contacts\ContactFilterRequest;
 use App\Http\Requests\Contacts\ContactSearchRequest;
 use App\Http\Requests\Contacts\ContactStoreRequest;
 use App\Http\Requests\Contacts\ContactUpdateRequest;
@@ -50,10 +51,10 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = Contact::all()->sortByDesc('created_at');
-
         return view('contacts.index')
             ->with('contacts', $contacts)
-            ->with('counts', $this->contact_counts());
+            ->with('counts',   $this->contact_counts())
+            ->with('filters',  $this->make_filters());
     }
 
     public function search(ContactSearchRequest $request)
@@ -82,28 +83,129 @@ class ContactController extends Controller
         return $counts;
     }
 
+    private function make_filters()
+    {
+        $filters  = [
+            0 => [
+                'label'   => 'Contact Source',
+                'name'    => 'contact_source',
+                'options' => []
+            ],
+            1 => [
+                'label'   => 'Salesperson',
+                'name'    => 'salesperson',
+                'options' => []
+            ]
+        ];
+
+        foreach (LeadSource::all() as $source) {
+            $filters[0]['options'][] = [
+                'id'    => $source->id,
+                'value' => "{$source->name} - {$source->description}"
+            ];
+        }
+
+        foreach (User::SalesUser()->get() as $user) {
+            $filters[1]['options'][] = [
+                'id'    => $user->id,
+                'value' => "{$user->first_name} {$user->last_name}"
+            ];
+        }
+
+        return $filters;
+    }
+
+    public function mycontacts()
+    {
+        $contacts = Contact::MyContacts()->get();
+        return view('contacts.index')
+            ->with('contacts', $contacts)
+            ->with('counts',   $this->contact_counts())
+            ->with('filters',  $this->make_filters());
+    }
+
+    public function filtercontacts(ContactFilterRequest $request)
+    {
+        $contacts = null;
+        $filters  = $request->validated();
+
+        if (! empty($filters['salesperson']) && ! empty($filters['contact_source'])) {
+            $source          = LeadSource::find($filters['contact_source'])->first();
+            $person          = User::find($filters['salesperson'])->first();
+            $applied_filters = [
+                0 => ['name' => "{$source->name} - {$source->description}"],
+                1 => ['name' => "{$person->first_name} {$person->last_name}"]
+            ];
+            $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                ->join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
+                ->where('contact_owners.user_id', '=', $filters['salesperson'])
+                ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
+                ->orderBy('contacts.created_at', 'desc');
+        }
+        else
+        {
+            if (! empty($filters['salesperson'])) {
+                $person          = User::find($filters['salesperson'])->first();
+                $applied_filters = [
+                    0 => ['name' => "{$person->first_name} {$person->last_name}"]
+                ];
+                $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                    ->where('contact_owners.user_id', '=', $filters['salesperson'])
+                    ->orderBy('contacts.created_at', 'desc');
+            }
+
+            if (! empty($filters['contact_source'])) {
+                $source          = LeadSource::find($filters['contact_source'])->first();
+                $applied_filters = [
+                    0 => ['name' => "{$source->name} - {$source->description}"]
+                ];
+                $contacts = Contact::join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
+                    ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
+                    ->orderBy('contacts.created_at', 'desc');
+            }
+        }
+
+        return view('contacts.index')
+            ->with('contacts',        $contacts->get())
+            ->with('counts',          $this->contact_counts())
+            ->with('filters',         $this->make_filters())
+            ->with('applied_filters', $applied_filters);
+    }
+
     public function leads()
     {
-       $contacts = Contact::all()->where('contact_type_id', '=', self::TYPE_LEAD);
-       return view('contacts.index')->with('contacts', $contacts)->with('counts', $this->contact_counts());
+        $contacts = Contact::all()->where('contact_type_id', '=', self::TYPE_LEAD)->sortByDesc('created_at');
+        return view('contacts.index')
+            ->with('contacts', $contacts)
+            ->with('counts',   $this->contact_counts())
+            ->with('filters',  $this->make_filters());
     }
 
     public function opportunities()
     {
-        $contacts = Contact::all()->where('contact_type_id', '=', self::TYPE_OPP);
-        return view('contacts.index')->with('contacts', $contacts)->with('counts', $this->contact_counts());
+        $contacts = Contact::all()->where('contact_type_id', '=', self::TYPE_OPP)->sortByDesc('created_at');
+        return view('contacts.index')
+            ->with('contacts', $contacts)
+            ->with('counts',   $this->contact_counts())
+            ->with('filters',  $this->make_filters());
     }
 
     public function customers()
     {
-        $contacts = Contact::all()->where('contact_type_id', '=', self::TYPE_CUSTOMER);
-        return view('contacts.index')->with('contacts', $contacts)->with('counts', $this->contact_counts());
+        $contacts = Contact::all()->where('contact_type_id', '=', self::TYPE_CUSTOMER)->sortByDesc('created_at');
+        return view('contacts.index')
+            ->with('contacts', $contacts)
+            ->with('counts',   $this->contact_counts())
+            ->with('filters',  $this->make_filters());
     }
 
     public function archived_contacts()
     {
-        $contacts = Contact::all()->where('deleted_at', '!=', 'null');
-        return view('contacts.index')->with('contacts', $contacts)->with('counts', $this->contact_counts());
+        $contacts = Contact::all()->where('deleted_at', '!=', 'null')->sortByDesc('created_at');
+        return view('contacts.index')
+            ->with('contacts', $contacts)
+            ->with('counts',   $this->contact_counts())
+            ->with('filters',  $this->make_filters());
     }
 
     public function create()
@@ -233,47 +335,53 @@ class ContactController extends Controller
 
     public function show($id)
     {
-        $activity = [];
-        $notes    = [];
-        $contact  = new Contact;
-        $contact  = $contact->find($id);
+        try {
+            $activity = [];
+            $notes    = [];
+            $contact  = new Contact;
+            $contact  = $contact->find($id);
 
-        if ($log = ActivityLog::contact($contact)->orderBy('created_at', 'desc')->get()) {
-            foreach ($log as $item) {
-                $user       = User::find($item->user_id);
-                $activity[] = [
-                    'note' => $item->note,
-                    'ts'   => $item->created_at,
-                    'user' => "{$user->first_name} {$user->last_name}",
-                ];
+            if ($log = ActivityLog::contact($contact)->orderBy('created_at', 'desc')->get()) {
+                foreach ($log as $item) {
+                    $user       = User::find($item->user_id);
+                    $activity[] = [
+                        'note' => $item->note,
+                        'ts'   => $item->created_at,
+                        'user' => "{$user->first_name} {$user->last_name}",
+                    ];
+                }
             }
-        }
 
-        if ($contact_notes = Notes::contact($contact)->orderBy('created_at', 'desc')->get()) {
-            foreach ($contact_notes as $item) {
-                $user    = User::find($item->user_id);
-                $notes[] = [
-                    'note' => $item->note,
-                    'ts'   => $item->created_at,
-                    'user' => "{$user->first_name} {$user->last_name}",
-                ];
+            if ($contact_notes = Notes::contact($contact)->orderBy('created_at', 'desc')->get()) {
+                foreach ($contact_notes as $item) {
+                    $user    = User::find($item->user_id);
+                    $notes[] = [
+                        'note' => $item->note,
+                        'ts'   => $item->created_at,
+                        'user' => "{$user->first_name} {$user->last_name}",
+                    ];
+                }
             }
-        }
 
-        return view('contacts.show', [
-            'contact'              => $contact,
-            'contact_owner'        => $contact->contact_owners()->first(),
-            'contact_source'       => $contact->lead_source()->first(),
-            'contact_type'         => ContactType::find($contact->contact_type_id),
-            'billing'              => Location::forContact($contact)->isBilling()->first(),
-            'delivery'             => Location::forContact($contact)->isDelivery()->first(),
-            'contact_method_types' => ContactMethodType::all(),
-            'contact_owners'       => User::AllUsers()->get(),
-            'contact_sources'      => LeadSource::all(),
-            'contact_types'        => ContactType::all(),
-            'activity'             => $activity,
-            'notes'                => $notes,
-        ]);
+            return view('contacts.show', [
+                'contact'              => $contact,
+                'contact_owner'        => $contact->contact_owners()->first(),
+                'contact_source'       => $contact->lead_source()->first(),
+                'contact_type'         => ContactType::find($contact->contact_type_id),
+                'billing'              => Location::forContact($contact)->isBilling()->first(),
+                'delivery'             => Location::forContact($contact)->isDelivery()->first(),
+                'contact_method_types' => ContactMethodType::all(),
+                'contact_owners'       => User::AllUsers()->get(),
+                'contact_sources'      => LeadSource::all(),
+                'contact_types'        => ContactType::all(),
+                'activity'             => $activity,
+                'notes'                => $notes,
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return view('errors.error', ['error' => $e->getMessage()]);
+        }
     }
 
     public function edit($id)
@@ -490,7 +598,7 @@ class ContactController extends Controller
         $contact = new Contact;
         $contact = $contact->find($id);
         $contact->delete();
-        $contact->locations()->delete();
+        $contact->locations()->detach();
 
         // Activity Log
         //

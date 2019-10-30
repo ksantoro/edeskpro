@@ -10,6 +10,7 @@ use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\TenantModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -59,6 +60,11 @@ class Contact extends TenantModel
     {
         $database = DB::connection('tenant')->getDatabaseName();
         return $this->belongsToMany(LeadSource::class, "{$database}.contact_lead_sources", 'contact_id', 'lead_source_id');
+    }
+
+    public function scopeMyContacts($query)
+    {
+        return $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')->where('contact_owners.user_id', '=', Auth::user()->id)->orderBy('created_at', 'desc');
     }
 
     public function scopeLeads($query)

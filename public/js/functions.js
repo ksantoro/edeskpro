@@ -228,11 +228,11 @@ function log_contact_activity(contact_id, action)
     }
 }
 
-function limit_text(limit_field, limit_count, limit_num) 
+function limit_text(limit_field, limit_count, limit_num)
 {
     if (limit_field.value.length > limit_num) {
         limit_field.value = limit_field.value.substring(0, limit_num);
-    } 
+    }
     else {
         limit_count.value = limit_num - limit_field.value.length;
     }

@@ -66,7 +66,7 @@
                                 </div>
                                 <div class='row form-row'>
                                     <div class='col'>
-                                        <a class='btn btn-secondary btn-lg float-right' href='/password/reset'>Reset Password</a>
+                                        <a class='btn btn-secondary float-right' data-toggle='modal' data-target='#editUserModal'>Reset Password</a>
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +134,31 @@
                         <a href="/users/{{ $user->id }}" class='btn btn-secondary'>Cancel</a>
                     </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class='modal fade' id='editUserModal' tabindex='-1' role='dialog' aria-labelledby='editUserModalTitle' aria-hidden='true'>
+        <div class='modal-dialog modal-dialog-centered' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title' id='editUserModalTitle'>Edit User</h5>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body' id='editUserModalBody'>
+                    Are you sure you want to set a password reset email to {{ $user->email }}?
+                    <form method='POST' action='/password/email' aria-label='{{ __('Reset Password') }}' id='userResetPasswordForm'>
+                        @csrf
+                        <input id='resetPasswordEmail' type='hidden' name='resetPasswordEmail' value="{{ $user->email }}">
+                    </form>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                    <button type='button' class='btn btn-primary' id='userResetPasswordFormButton'>Send Email</button>
                 </div>
             </div>
         </div>
