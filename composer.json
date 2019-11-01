@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": "^7.2.0",
-        "aws/aws-sdk-php": "^3.108",
+        "aws/aws-sdk-php": "~3.0",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "doctrine/dbal": "^2.9",
         "dusterio/laravel-aws-worker": "^0.1.17",
