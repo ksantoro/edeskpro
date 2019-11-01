@@ -18,33 +18,25 @@ class UserController extends Controller
 {
     use SoftDeletes, SerializesModels;
 
-    const
-        SUPER      = 1,
-        ADMIN      = 2,
-        TECH       = 3,
-        CSR        = 4,
-        SALES      = 5,
-        SALES_MGR  = 6,
-        FIELD_TECH = 7,
-        FOREMAN    = 8,
-        MARKETING  = 9,
-        FINANCE    = 10;
-
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('tenant');
     }
 
+    public function current_user()
+    {
+        return Auth::user();
+    }
+
     public function index()
     {
-        $users           = User::AllUsers()->where('type_user_id', '<>', self::SUPER)->get();
+        $users           = User::AllUsers()->get();
         $counts          = [];
         $counts['all']   = count($users);
-        $counts['admin'] = count($users->whereIn('type_user_id', [self::ADMIN]));
-        $counts['sales'] = count($users->whereIn('type_user_id', [self::CSR, self::SALES, self::SALES_MGR, self::MARKETING]));
-        $counts['tech']  = count($users->whereIn('type_user_id', [self::TECH, self::FIELD_TECH, self::FOREMAN]));
+        $counts['admin'] = count($users->whereIn('type_user_id', [User::ADMIN]));
+        $counts['sales'] = count($users->whereIn('type_user_id', [User::CSR, User::SALES, User::SALES_MGR, User::MARKETING]));
+        $counts['tech']  = count($users->whereIn('type_user_id', [User::TECH, User::FIELD_TECH, User::FOREMAN]));
 
         return view('user.index')
             ->with('users', $users)
@@ -53,7 +45,7 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
-        $users = User::AllUsers()->where('type_user_id', '<>', self::SUPER);
+        $users = User::AllUsers()->where('type_user_id', '<>', User::SUPER);
         $users = $users->where('first_name', 'LIKE', "%{$request->search_term}%")
             ->orWhere('last_name', 'LIKE', "%{$request->search_term}%")
             ->orWhere('email', 'LIKE', "%{$request->search_term}%")
@@ -61,9 +53,9 @@ class UserController extends Controller
 
         $counts          = [];
         $counts['all']   = count($users);
-        $counts['admin'] = count($users->whereIn('type_user_id', [self::ADMIN]));
-        $counts['sales'] = count($users->whereIn('type_user_id', [self::CSR, self::SALES, self::SALES_MGR, self::MARKETING]));
-        $counts['tech']  = count($users->whereIn('type_user_id', [self::TECH, self::FIELD_TECH, self::FOREMAN]));
+        $counts['admin'] = count($users->whereIn('type_user_id', [User::ADMIN]));
+        $counts['sales'] = count($users->whereIn('type_user_id', [User::CSR, User::SALES, User::SALES_MGR, User::MARKETING]));
+        $counts['tech']  = count($users->whereIn('type_user_id', [User::TECH, User::FIELD_TECH, User::FOREMAN]));
 
         return view('user.index')
             ->with('users', $users)
@@ -74,7 +66,7 @@ class UserController extends Controller
     {
         return view('user.create', [
             'user_method_types' => ContactMethodType::all(),
-            'user_types'        => UserType::all()->where('id', '!=', '1'),
+            'user_types'        => UserType::AllTypes()->get(),
         ]);
     }
 
@@ -120,7 +112,8 @@ class UserController extends Controller
 
     public function show($id)
     {
-         $roles      = Role::all();
+         $roles      = Role::Configurable()->get();
+         $parents    = Role::Parent()->get();
          $user       = User::find($id);
          $user_roles = [];
 
@@ -129,6 +122,7 @@ class UserController extends Controller
          }
 
          return view('user.show', [
+             'parents'    => $parents,
              'roles'      => $roles,
              'user'       => $user,
              'user_roles' => $user_roles,
@@ -139,10 +133,11 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return view('user.edit', [
+            'parents'           => Role::Parent()->get(),
+            'roles'             => Role::Configurable()->get(),
             'user'              => $user,
-            'roles'             => Role::all(),
             'user_method_types' => ContactMethodType::all(),
-            'user_types'        => UserType::all()->where('id', '!=', '1'),
+            'user_types'        => UserType::AllTypes()->get(),
         ]);
     }
 
@@ -190,7 +185,7 @@ class UserController extends Controller
         $user = new User;
         $user = $user->find($id);
         $user->delete();
-        $user->roles()->delete();
+        $user->roles()->detach();
         return redirect()->route('users.index');
     }
 }

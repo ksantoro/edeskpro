@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'EST',
+    'timezone' => 'America/New_York',
 
     /*
     |--------------------------------------------------------------------------
@@ -159,7 +159,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Dusterio\AwsWorker\Integrations\LaravelServiceProvider::class
     ],
 
     /*

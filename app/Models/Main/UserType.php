@@ -12,4 +12,14 @@ class UserType extends MainModel
     {
         return $this->belongsTo(User::class);
     }
+
+    public function notification_types()
+    {
+        return $this->belongsToMany(NotificationType::class, 'notification_type_user', 'user_type_id', 'notification_type_id');
+    }
+
+    public function scopeAllTypes($query)
+    {
+        return $query->where('id', '<>', 1);
+    }
 }

@@ -36,10 +36,16 @@
 <div class='row'>
     <div class='col-sm-12 contact-card'>
         <div class='card'>
-            <div class='card-header'>Snapshot Details</div>
+            <div class='card-header'>News & Updates</div>
 
             <div class='card-body'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ullamcorper eget nulla facilisi etiam dignissim diam. Posuere ac ut consequat semper viverra nam. Vitae justo eget magna fermentum iaculis. Sed libero enim sed faucibus. Vulputate odio ut enim blandit volutpat maecenas. Felis donec et odio pellentesque diam volutpat. Nunc lobortis mattis aliquam faucibus purus in massa. Aliquet risus feugiat in ante metus. Lacus vestibulum sed arcu non odio euismod lacinia at. Volutpat lacus laoreet non curabitur gravida arcu. Convallis aenean et tortor at risus viverra adipiscing at. Nec ullamcorper sit amet risus nullam. Magna fermentum iaculis eu non diam phasellus vestibulum lorem. Enim lobortis scelerisque fermentum dui faucibus.
+                <h4>Email Notifications Have Arrived</h4>
+                <p>Now you can configure custom email notifications for different actions in eDesk. Go to the Notifications Management module and create new
+                    notification triggers. Every time that trigger happens, an email notification will be fired to the users of your choice. Enjoy and if you
+                    run into any issues or bugs, be sure to reach out to our tech support team!</p>
+                <h4>Flexible Navigation Menu</h4>
+                <p>I am sure you have noticed already but the navigation menu has been updated. Now it can be more user-friendly with any device, desktops,
+                    laptops, tablets or phones. Just click the "hamburger" icon at the top left and the navigation menu will slide out.</p>
             </div>
         </div>
     </div>

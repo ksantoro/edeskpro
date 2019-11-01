@@ -4,11 +4,11 @@
 @section('content')
     <div class='main-section'>
         <div class='container-fluid'>
-            <div class='row'>
-                <div class='col-md-1'>
-                    <a href='{{ route('users.create') }}' class='btn btn-primary'>Create New</a>
+            <div class='d-flex flex-row'>
+                <div class='p-2'>
+                    <a href='/users/create' class='btn btn-primary'>Create New</a>
                 </div>
-                <div class='col-md-10'>
+                <div class='p-2 flex-grow-1'>
                     <!-- Search box -->
                     <form id='search-users' action="{{ route('users.search') }}" method='POST'>
                         @csrf
@@ -20,8 +20,8 @@
                         </div>
                     </form>
                 </div>
-                <div class='col-md-1'>
-                    <a href='{{ route('users.index') }}' class='btn btn-secondary float-right'>Clear Search</a>
+                <div class='p-2'>
+                    <a href='/users' class='btn btn-secondary float-right'>Clear Search</a>
                 </div>
             </div>
             <div class='row justify-content-center'>
@@ -74,7 +74,7 @@
 
                                 @foreach ($users as $user)
                                     <div class='col-md-4 contact-card'>
-                                        <div class='card'>
+                                        <div class='card mt-3'>
                                             <div class='card-header'>
 
                                                 <div class='row justify-content-end'>
@@ -82,25 +82,26 @@
                                                         <i class='fas fa-user-circle'></i> &nbsp; {{ $user->first_name }} {{ $user->last_name }}
                                                     </div>
                                                     <div class='col-6 mr-auto'>
-                                                        <div class='btn-group btn-group-sm float-right'>
-                                                            <button type='button' class='btn btn-info dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                                                <i class='fas fa-cog'></i> <span class='caret'></span>
-                                                            </button>
-                                                            <ul class='dropdown-menu dropdown-menu-right'>
-                                                                <li><a href='{{ route('users.show', ['user' => $user]) }}'><i class='far fa-eye'></i> &nbsp; View Details</a></li>
-                                                                <li><a href='{{ route('users.edit', ['user' => $user]) }}'><i class='fas fa-user-edit'></i> &nbsp; Edit User</a></li>
-                                                                <li><a href='#'><i class='fas fa-pencil-alt'></i> &nbsp; Assign Owner</a></li>
-                                                                <li role='separator' class='dropdown-divider'></li>
-                                                                <li>
-                                                                    <a href='{{ route('users.destroy', ['user' => $user]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $user->id }}').submit();">
-                                                                        <i class='fas fa-archive'></i> &nbsp; Archive
-                                                                    </a>
-                                                                    <form id='archive-form-{{ $user->id }}' action="{{ route('users.destroy', ['user' => $user]) }}" method='POST' style='display: none;'>
-                                                                        @method('DELETE')
-                                                                        @csrf
-                                                                    </form>
-                                                                </li>
-                                                            </ul>
+
+                                                        {{--action icons (temporary)--}}
+                                                        <div class='float-right px-1'>
+                                                            <a href='{{ route('users.destroy', ['user' => $user]) }}' onclick="event.preventDefault(); $('#archive-form-{{ $user->id }}').submit();">
+                                                                <i class='fas fa-archive'  title='Archive User' data-toggle='tooltip' data-placement='bottom'></i>
+                                                            </a>
+                                                            <form id='archive-form-{{ $user->id }}' action="{{ route('users.destroy', ['user' => $user]) }}" method='POST' style='display: none;'>
+                                                                @method('DELETE')
+                                                                @csrf
+                                                            </form>
+                                                        </div>
+                                                        <div class='float-right px-1'>
+                                                            <a href='{{ route('users.edit', ['user' => $user]) }}' class='float-right'>
+                                                                <i class='fas fa-user-edit' title='Edit User' data-toggle='tooltip' data-placement='bottom'></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class='float-right px-1'>
+                                                            <a href='{{ route('users.show', ['user' => $user]) }}'>
+                                                                <i class='far fa-eye' title='View User' data-toggle='tooltip' data-placement='bottom'></i>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -113,14 +114,14 @@
                                                         Email: {{ $user->email }} <br>
                                                         Created: {{ $user->created_at->format('m/d/Y g:i A') }}
                                                     </div>
-                                                    <div class='col col-1 text-right contact-buttons'>
-                                                        <a href='tel:{{ $user->phone }}' title='Call {{ $user->first_name }}'>
-                                                            <i class='fas fa-phone-square fa-3x'></i>
+                                                    <div class='col col-1 contact-buttons'>
+                                                        <a href='tel:{{ $user->phone }}' title='Call {{ $user->first_name }}' class='float-right'>
+                                                            <i class='fas fa-phone-square fa-2x px-1'></i>
                                                         </a>
                                                     </div>
-                                                    <div class='col col-1 text-right contact-buttons'>
-                                                        <a href='mailto:{{ $user->email }}' title='Email {{ $user->first_name }}'>
-                                                            <i class='fas fa-envelope-square fa-3x'></i>
+                                                    <div class='col col-1 contact-buttons'>
+                                                        <a href='mailto:{{ $user->email }}' title='Email {{ $user->first_name }}' class='float-right'>
+                                                            <i class='fas fa-envelope-square fa-2x px-1'></i>
                                                         </a>
                                                     </div>
                                                 </div>

@@ -1,12 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Notes;
 
-use App\Notes;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Notes\NoteStoreRequest;
+use App\Models\Tenant\Notes;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class NotesController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('tenant');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,9 +43,25 @@ class NotesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NoteStoreRequest $request)
     {
-        //
+        if ($valid = $request->validated()) {
+            try {
+                $note                 = new Notes();
+                $note->entity_type_id = $valid['entity_type_id'];
+                $note->entity_id      = $valid['entity_id'];
+                $note->note           = $valid['note'];
+                $note->user_id        = Auth::user()->id;
+                $note->created_at     = Carbon::now();
+                $note->save();
+            }
+            catch(\Exception $e) {
+                Log::debug(__METHOD__. ' Error - ' . $e->getMessage());
+            }
+        }
+        else {
+            Log::debug(__METHOD__. ' - Note entry failed validation with the following errors', (array) $valid->errors());
+        }
     }
 
     /**

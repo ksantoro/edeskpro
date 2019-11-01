@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
             RoleTableSeeder::class,
             UsersTableSeeder::class,
             TypeUserRoleTableSeeder::class,
+            EntityTypeTableSeeder::class,
+            ActionTypeTableSeeder::class,
+            NotificationSendTypeTableSeeder::class,
+            NotificationTypeTableSeeder::class,
         ]);
     }
 }

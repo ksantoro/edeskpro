@@ -3,14 +3,28 @@
 namespace App\Models\Main;
 
 use App\Models\Tenant\Contact;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, CanResetPassword;
+
+    const
+        SUPER      = 1,
+        ADMIN      = 2,
+        TECH       = 3,
+        CSR        = 4,
+        SALES      = 5,
+        SALES_MGR  = 6,
+        FIELD_TECH = 7,
+        FOREMAN    = 8,
+        MARKETING  = 9,
+        FINANCE    = 10;
 
     protected $connection = 'main';
 
@@ -78,7 +92,7 @@ class User extends Authenticatable
     public function contact_owners()
     {
         $database = DB::connection('tenant')->getDatabaseName();
-        return $this->hasMany(Contact::class, "{$database}.contact_owners", 'user_id', 'contact_id');
+        return $this->belongsToMany(Contact::class, "{$database}.contact_owners", 'user_id', 'contact_id');
     }
 
     public function scopeAllUsers($query)

@@ -68,6 +68,17 @@ Breadcrumbs::register('contacts.edit', function ($breadcrumbs, $contact) {
     $breadcrumbs->push('Edit Contact', route('contacts.edit', $contact));
 });
 
+// Notifications
+//
+Breadcrumbs::register('notifications.index', function ($breadcrumbs) {
+    $breadcrumbs->push('Notifications Management', route('notifications.index'));
+});
+
+Breadcrumbs::register('notifications.create', function ($breadcrumbs) {
+    $breadcrumbs->parent('notifications.index');
+    $breadcrumbs->push('New Notifications', route('notifications.create'));
+});
+
 // Users
 //
 Breadcrumbs::register('users.index', function ($breadcrumbs) {

@@ -8,15 +8,22 @@
 </head>
 <body>
 
-   @include('layouts.partials.nav')
+<div style='height: 100%;'> <!-- TODO: add this somewhere else -->
 
-   @yield('breadcrumbs')
+    @include('layouts.partials.nav')
 
-   @yield('content')
+    <div style='margin-top: 70px;'></div> <!-- TODO: add this somewhere else -->
 
-   @include('layouts.partials.footer')
+    @yield('breadcrumbs')
+
+    @yield('content')
+
+    @include('layouts.partials.footer')
+
+</div>
 
    @include('layouts.partials.footer-scripts')
 
+   <script src='/js/app.js'></script>
 </body>
 </html>

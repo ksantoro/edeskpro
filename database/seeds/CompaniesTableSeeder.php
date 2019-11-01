@@ -14,21 +14,11 @@ class CompaniesTableSeeder extends Seeder
     {
         DB::table('companies')->insert([
             'id'         => 1,
-            'name'       => 'Test Company',
-            'hostname'   => 'localhost',
+            'name'       => 'eDeskPro Company',
+            'hostname'   => 'aa16q4o4htn12px.c3vly6qblre9.us-east-2.rds.amazonaws.com',
             'username'   => 'root',
             'password'   => encrypt('hza95ahr'),
-            'database'   => 'test_db',
-            'created_at' => Carbon::now()->toDateTimeString()
-        ]);
-
-        DB::table('companies')->insert([
-            'id'         => 2,
-            'name'       => 'Test Company 2',
-            'hostname'   => 'localhost',
-            'username'   => 'root',
-            'password'   => encrypt('hza95ahr'),
-            'database'   => 'test_db2',
+            'database'   => 'edeskpro',
             'created_at' => Carbon::now()->toDateTimeString()
         ]);
     }

@@ -10,8 +10,8 @@
                     <div class='card'>
                         <div class='card-header'>User Information</div>
                         <div class='card-body'>
-                            <form id='create-new-user' name='create-new-user' action='{{ route('users.store') }}' method='POST'>
-                                {{ csrf_field() }}
+                            <form id='create-new-user' name='create-new-user' action='/users' method='POST'>
+                                @csrf
                                 <div class='row form-row'>
                                     <div class='col'>
                                         <div class='form-group'>
@@ -19,7 +19,11 @@
                                             <select class='form-control' name='user_type_id'>
                                                 @if (isset($user_types))
                                                     @foreach ($user_types as $type)
-                                                        <option value='{{ $type->id }}'>{{ $type->description }}</option>
+                                                        <option value='{{ $type->id }}'
+                                                            @if ($type->id == old('user_type_id'))
+                                                                selected='selected'
+                                                            @endif
+                                                        >{{ $type->description }}</option>
                                                     @endforeach
                                                 @endif
                                             </select>
@@ -94,9 +98,9 @@
                         </div>
                     <br>
                     <div class='form-group'>
-                        <input type='submit' value='Save New User' class='btn btn-primary btn-lg'>
-                        <a href='#' class='btn btn-success btn-lg' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
-                        <a href='{{ URL::to('users') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+                        <input type='submit' value='Save New User' class='btn btn-primary'>
+                        <a href='#' class='btn btn-success' onclick='document.getElementById("create-new-user").reset();'>Clear Form</a>
+                        <a href='{{ URL::to('users') }}' class='btn btn-secondary'>Cancel</a>
                     </div>
                     </form>
                 </div>

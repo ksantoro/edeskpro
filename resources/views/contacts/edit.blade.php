@@ -10,30 +10,56 @@
             <div class='card'>
                <div class='card-header'>Edit {{ $contact->first_name }} {{ $contact->last_name }}</div>
                <div class='card-body'>
-                  <form id='edit-contact' name='edit-contact' action='{{ route('contacts.update', $contact->id) }}' method='POST'>
-                  {{ csrf_field() }}
-                      {{ method_field('PUT') }}
+                  <form id='edit-contact' name='edit-contact' action='/contacts/{{ $contact->id }}' method='POST'>
+                     @csrf
+                     {{ method_field('PUT') }}
                      <div class='row form-row'>
                         <div class='col'>
-                            <div class='form-group'>
-                                <label for='contact_owner_id'>Contact Owner</label><br>
-                                <select class='form-control' name='contact_owner_id'>
-                                    <option value=''>Unassigned</option>
-                                    @if (isset($contact_owners))
-                                        @foreach ($contact_owners as $owner)
-                                            <option value='{{ $owner->id }}'
-                                            @if ($contact_owner)
-                                               @if ($owner->id == $contact_owner->id)
-                                                  selected='selected'
-                                               @endif
+                            <div class='row form-row'>
+                                <div class='col'>
+                                    <div class='form-group'>
+                                        <label for='contact_owner_id'>Contact Owner</label><br>
+                                        <select class='form-control' name='contact_owner_id'>
+                                            <option value=''>Unassigned</option>
+                                            @if (isset($contact_owners))
+                                                @foreach ($contact_owners as $owner)
+                                                    <option value='{{ $owner->id }}'
+                                                            @if ($contact_owner)
+                                                            @if ($owner->id == $contact_owner->id)
+                                                            selected='selected'
+                                                        @endif
+                                                        @endif
+                                                    >{{ $owner->first_name }} {{ $owner->last_name }}</option>
+                                                @endforeach
                                             @endif
-                                            >{{ $owner->first_name }} {{ $owner->last_name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @if ($errors->has('contact_owner_id'))
-                                    <div class='alert alert-danger mt-1'>{{ $errors->first('contact_owner_id') }}</div>
-                                @endif
+                                        </select>
+                                        @if ($errors->has('contact_owner_id'))
+                                            <div class='alert alert-danger mt-1'>{{ $errors->first('contact_owner_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class='col'>
+                                    <div class='form-group'>
+                                        <label for='contact_source'>Contact Source</label><br>
+                                        <select class='form-control' name='contact_source'>
+                                            <option value=''>Unknown</option>
+                                            @if (isset($contact_sources))
+                                                @foreach ($contact_sources as $source)
+                                                    <option value='{{ $source->id }}'
+                                                            @if ($contact_source)
+                                                            @if ($source->id == $contact_source->id)
+                                                            selected='selected'
+                                                        @endif
+                                                        @endif
+                                                    >{{ $source->name }} - {{ $source->description }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('contact_source'))
+                                            <div class='alert alert-danger mt-1'>{{ $errors->first('contact_source') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class='col'>
@@ -205,7 +231,18 @@
                            <div class='col'>
                               <div class='form-group'>
                                  <label for='billing_state'>State</label>
-                                 <input type='text' name='billing_state' id='billing_state' class='form-control' value='{{ $billing->state }}'>
+                                  <select name='billing_state' id='billing_state' class='form-control' value='{{ $billing->state }}'>
+                                      @foreach ($states as $state)
+                                          <option
+                                              value='{{ $state->code }}'
+                                              @if ($billing->state == $state->code)
+                                              selected='selected'
+                                              @endif
+                                          >
+                                              {{ $state->code }} - {{ $state->name }}
+                                          </option>
+                                      @endforeach
+                                  </select>
                                  @if ($errors->has('billing_state'))
                                     <div class='alert alert-danger mt-1'>{{ $errors->first('billing_state') }}</div>
                                  @endif
@@ -269,7 +306,18 @@
                            <div class='col'>
                               <div class='form-group'>
                                  <label for='delivery_state'>State</label>
-                                 <input type='text' name='delivery_state' id='delivery_state' class='form-control' value='{{ $delivery->state }}'>
+                                  <select name='delivery_state' id='delivery_state' class='form-control' value='{{ $delivery->state }}'>
+                                      @foreach ($states as $state)
+                                          <option
+                                              value='{{ $state->code }}'
+                                              @if ($delivery->state == $state->code)
+                                              selected='selected'
+                                              @endif
+                                          >
+                                              {{ $state->code }} - {{ $state->name }}
+                                          </option>
+                                      @endforeach
+                                  </select>
                                  @if ($errors->has('delivery_state'))
                                     <div class='alert alert-danger mt-1'>{{ $errors->first('delivery_state') }}</div>
                                  @endif
@@ -291,8 +339,8 @@
             </div>
             <br>
             <div class='form-group'>
-               <input type='submit' value='Save Contact' class='btn btn-primary btn-lg'>
-               <a href='{{ route('contacts.index') }}' class='btn btn-secondary btn-lg'>Cancel</a>
+               <input type='submit' value='Save Contact' class='btn btn-primary'>
+               <a href='/contacts/{{ $contact->id }}' class='btn btn-secondary'>Cancel</a>
             </div>
             </form>
          </div>
