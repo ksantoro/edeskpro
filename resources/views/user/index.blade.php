@@ -64,6 +64,10 @@
 
                     <div class='row'>
 
+                        @isset($message)
+                            <div class='alert alert-danger' role='alert'>{{ $message }}</div>
+                        @endisset
+
                         @isset($users)
 
                             @empty($users)

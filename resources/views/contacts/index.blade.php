@@ -129,6 +129,11 @@
                         </div>
                     </div>
                     <div class='col col-md-10'>
+
+                        @isset($alert_message)
+                            <div class='alert alert-danger' role='alert'>{{ $alert_message }}</div>
+                        @endisset
+
                         @isset($contacts)
                             @empty($contacts)
                                 There are no contacts to display.

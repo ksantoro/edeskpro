@@ -97,7 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeAllUsers($query)
     {
-        return $query->where('type_user_id', '<>', 1)->where('company_id', '=', Auth::user()->company->id);
+        return $query->where('type_user_id', '<>', 1)->where('company_id', '=', Auth::user()->company->id)->where('deleted_at', '=', null);
     }
 
     public function scopeSuperUser($query)

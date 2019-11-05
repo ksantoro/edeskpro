@@ -31,16 +31,9 @@ class UserController extends Controller
 
     public function index()
     {
-        $users           = User::AllUsers()->get();
-        $counts          = [];
-        $counts['all']   = count($users);
-        $counts['admin'] = count($users->whereIn('type_user_id', [User::ADMIN]));
-        $counts['sales'] = count($users->whereIn('type_user_id', [User::CSR, User::SALES, User::SALES_MGR, User::MARKETING]));
-        $counts['tech']  = count($users->whereIn('type_user_id', [User::TECH, User::FIELD_TECH, User::FOREMAN]));
-
         return view('user.index')
-            ->with('users', $users)
-            ->with('counts', $counts);
+            ->with('users', User::AllUsers()->get())
+            ->with('counts', $this->user_counts());
     }
 
     public function search(Request $request)
@@ -60,6 +53,18 @@ class UserController extends Controller
         return view('user.index')
             ->with('users', $users)
             ->with('counts', $counts);
+    }
+
+    private function user_counts()
+    {
+        $users           = User::AllUsers()->get();
+        $counts          = [];
+        $counts['all']   = count($users);
+        $counts['admin'] = count($users->whereIn('type_user_id', [User::ADMIN]));
+        $counts['sales'] = count($users->whereIn('type_user_id', [User::CSR, User::SALES, User::SALES_MGR, User::MARKETING]));
+        $counts['tech']  = count($users->whereIn('type_user_id', [User::TECH, User::FIELD_TECH, User::FOREMAN]));
+
+        return $counts;
     }
 
     public function create()
@@ -182,10 +187,24 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = new User;
-        $user = $user->find($id);
-        $user->delete();
-        $user->roles()->detach();
-        return redirect()->route('users.index');
+        $message = 'There was an error archiving user.';
+
+        if ($id) {
+            try {
+                $user = User::find($id);
+                $user->roles()->detach();
+                $user->delete();
+                $message = 'User successfully archived.';
+            }
+            catch (\Exception $e) {
+                Log::debug(__METHOD__. ' - ' . $e->getMessage());
+                $message .= ' Error: ' . $e->getMessage();
+            }
+        }
+
+        return view('user.index')
+            ->with('users',         User::AllUsers()->get())
+            ->with('counts',        $this->user_counts())
+            ->with('alert_message', $message);
     }
 }

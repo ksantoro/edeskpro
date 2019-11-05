@@ -33,6 +33,9 @@ class Contact extends TenantModel
             'phone_type_id',
             'email',
             'email_type_id',
+            'created_at',
+            'updated_at',
+            'deleted_at',
         ];
 
     public function activityLog()

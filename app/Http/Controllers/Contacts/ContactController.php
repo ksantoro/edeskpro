@@ -126,50 +126,67 @@ class ContactController extends Controller
 
     public function filtercontacts(ContactFilterRequest $request)
     {
-        $contacts = null;
-        $filters  = $request->validated();
+        $contacts        = null;
+        $results         = null;
+        $applied_filters = [];
+        $filters         = $request->validated();
+        $message         = 'You filters returned 0 results.';
 
-        if (! empty($filters['salesperson']) && ! empty($filters['contact_source'])) {
-            $source          = LeadSource::find($filters['contact_source'])->first();
-            $person          = User::find($filters['salesperson'])->first();
-            $applied_filters = [
-                0 => ['name' => "{$source->name} - {$source->description}"],
-                1 => ['name' => "{$person->first_name} {$person->last_name}"]
-            ];
-            $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
-                ->join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
-                ->where('contact_owners.user_id', '=', $filters['salesperson'])
-                ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
-                ->orderBy('contacts.created_at', 'desc');
-        }
-        else
-        {
-            if (! empty($filters['salesperson'])) {
-                $person          = User::find($filters['salesperson'])->first();
+        try {
+            if (! empty($filters['salesperson']) && ! empty($filters['contact_source'])) {
+                $source          = LeadSource::find($filters['contact_source']);
+                $person          = User::find($filters['salesperson']);
                 $applied_filters = [
-                    0 => ['name' => "{$person->first_name} {$person->last_name}"]
+                    0 => ['name' => "{$source->name} - {$source->description}"],
+                    1 => ['name' => "{$person->first_name} {$person->last_name}"]
                 ];
                 $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                    ->join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
                     ->where('contact_owners.user_id', '=', $filters['salesperson'])
+                    ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
+                    ->where('contacts.deleted_at', '=', null)
                     ->orderBy('contacts.created_at', 'desc');
+            }
+            else
+            {
+                if (! empty($filters['salesperson'])) {
+                    $person          = User::find($filters['salesperson']);
+                    $applied_filters = [
+                        0 => ['name' => "{$person->first_name} {$person->last_name}"]
+                    ];
+                    $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                        ->where('contact_owners.user_id', '=', $filters['salesperson'])
+                        ->where('contacts.deleted_at', '=', null)
+                        ->orderBy('contacts.created_at', 'desc');
+                }
+
+                if (! empty($filters['contact_source'])) {
+                    $source          = LeadSource::find($filters['contact_source']);
+                    $applied_filters = [
+                        0 => ['name' => "{$source->name} - {$source->description}"]
+                    ];
+                    $contacts = Contact::join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
+                        ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
+                        ->where('contacts.deleted_at', '=', null)
+                        ->orderBy('contacts.created_at', 'desc');
+                }
             }
 
-            if (! empty($filters['contact_source'])) {
-                $source          = LeadSource::find($filters['contact_source'])->first();
-                $applied_filters = [
-                    0 => ['name' => "{$source->name} - {$source->description}"]
-                ];
-                $contacts = Contact::join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
-                    ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
-                    ->orderBy('contacts.created_at', 'desc');
+            if ($contacts) {
+                $results = $contacts->get();
+                $message = 'Your filters returned ' . (! empty($results) ? count($results) : 0) . ' result(s).';
             }
+        }
+        catch (\Exception $e) {
+            $message = $e->getMessage();
         }
 
         return view('contacts.index')
-            ->with('contacts',        $contacts->get())
+            ->with('contacts',        $results)
             ->with('counts',          $this->contact_counts())
             ->with('filters',         $this->make_filters())
-            ->with('applied_filters', $applied_filters);
+            ->with('applied_filters', $applied_filters)
+            ->with('alert_message',   $message);
     }
 
     public function leads()
@@ -595,31 +612,41 @@ class ContactController extends Controller
     */
     public function destroy($id)
     {
-        $contact = new Contact;
-        $contact = $contact->find($id);
-        $contact->delete();
-        $contact->locations()->detach();
+        $message = 'There was an error archiving contact.';
 
-        // Activity Log
-        //
-        $log            = new ContactActivityLog();
-        $log->entity_id = $contact->id;
-        $log->note      = 'Contact archived';
-        $log->save();
+        if ($id) {
+            try {
+                $contact = Contact::find($id);
+                $contact->locations()->delete();
+                $contact->delete();
 
-        // Notification
-        //
-        try {
-            if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(3), NotificationSendType::find(2))) {
-                foreach ($users_to_notify as $user_to_notify) {
-                    Mail::to(User::find($user_to_notify))->send(new ContactDelete($contact));
+                // Activity Log
+                //
+                $log            = new ContactActivityLog();
+                $log->entity_id = $contact->id;
+                $log->note      = 'Contact archived';
+                $log->save();
+
+                // Notification
+                //
+                if ($users_to_notify = (new NotificationUser())->find_users_to_notify(NotificationType::find(3), NotificationSendType::find(2))) {
+                    foreach ($users_to_notify as $user_to_notify) {
+                        Mail::to(User::find($user_to_notify))->send(new ContactDelete($contact));
+                    }
                 }
-            }
-        }
-        catch (\Exception $exception) {
-            Log::debug(__METHOD__ . ' - Exception - ' . $exception->getMessage());
-        }
 
-        return redirect()->route('contacts.index');
+                $message = 'Contact successfully archived.';
+            }
+            catch (\Exception $e) {
+                Log::debug(__METHOD__ . ' - Exception - ' . $e->getMessage());
+                $message .= ' Error: ' . $e->getMessage();
+            }
+
+            return view('contacts.index')
+                ->with('contacts',      Contact::all()->sortByDesc('created_at'))
+                ->with('counts',        $this->contact_counts())
+                ->with('filters',       $this->make_filters())
+                ->with('alert_message', $message);
+        }
     }
 }
