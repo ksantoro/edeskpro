@@ -130,6 +130,12 @@
                     </div>
                     <div class='col col-md-10'>
 
+                        <div class='row'>
+                            <div class='col col-auto'>
+                                {{ $contacts->links() }}
+                            </div>
+                        </div>
+
                         @isset($alert_message)
                             <div class='alert alert-danger' role='alert'>{{ $alert_message }}</div>
                         @endisset
@@ -196,6 +202,12 @@
                         @else
                             There are no contacts to display.
                         @endisset
+
+                        <div class='row'>
+                            <div class='col col-auto'>
+                                {{ $contacts->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

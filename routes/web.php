@@ -47,7 +47,7 @@ Route::name('contacts.')->group(function() {
         Route::put('contacts/{contact}',      'ContactController@update')->name('update')->middleware('tenant', 'roles:12');
         Route::delete('contacts/{contact}',   'ContactController@destroy')->name('destroy')->middleware('tenant', 'roles:14');
         Route::get('mycontacts',              'ContactController@mycontacts')->name('mycontacts');
-        Route::post('filtercontacts',          'ContactController@filtercontacts')->name('filtercontacts');
+        Route::post('filtercontacts',         'ContactController@filtercontacts')->name('filtercontacts');
         Route::get('leads',                   'ContactController@leads')->name('leads')->middleware('tenant', 'roles:11');
         Route::get('opportunities',           'ContactController@opportunities')->name('opportunities')->middleware('tenant', 'roles:11');
         Route::get('customers',               'ContactController@customers')->name('customers')->middleware('tenant', 'roles:11');
