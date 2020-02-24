@@ -38,7 +38,6 @@ class UserUpdateRequest extends FormRequest
     public function filters()
     {
         return [
-            'email'           => 'trim',
             'first_name'      => 'trim|capitalize',
             'last_name'       => 'trim|capitalize',
         ];
