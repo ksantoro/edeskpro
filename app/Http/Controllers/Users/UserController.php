@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\Main\User;
 use App\Models\Main\UserType;
 use App\Models\Main\UserTypeRole;
@@ -146,27 +147,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         Log::debug($request);
+        $valid              = $request->validated();
+        $user               = User::find($id);
+        $user->first_name   = $valid['first_name'];
+        $user->last_name    = $valid['last_name'];
+        $user->type_user_id = $valid['user_type_id'];
+        $user->save();
 
-        $validator = Validator::make($request->all(), [
-            'first_name'   => 'required|string|max:255',
-            'last_name'    => 'required|string|max:255',
-            'user_type_id' => 'required|numeric',
-        ]);
-
-        if ($validator->fails())
-        {
-            return redirect("/users/{$id}/edit")
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $user = User::find($id);
+        // Roles
+        //
         $user->roles()->detach();
 
-        foreach ($request->role_user as $role => $toggle) {
+        foreach ($valid['role_user'] as $role => $toggle) {
             if ($toggle == 'on') {
                 $user->roles()->attach($role);
             }
