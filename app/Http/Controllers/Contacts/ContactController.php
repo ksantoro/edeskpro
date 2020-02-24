@@ -50,7 +50,7 @@ class ContactController extends Controller
 
     public function index()
     {
-        $contacts = Contact::where('deleted_at', '=', null)->orderBy('created_at', 'desc')->paginate(20);
+        $contacts = Contact::IndexList()->paginate(20);
         return view('contacts.index')
             ->with('contacts', $contacts)
             ->with('counts',   $this->contact_counts())
@@ -191,7 +191,7 @@ class ContactController extends Controller
 
     public function leads()
     {
-        $contacts = Contact::where('contact_type_id', '=', self::TYPE_LEAD)->orderBy('created_at', 'desc')->paginate(20);
+        $contacts = Contact::IndexLeads()->paginate(20);
         return view('contacts.index')
             ->with('contacts', $contacts)
             ->with('counts',   $this->contact_counts())
@@ -200,7 +200,7 @@ class ContactController extends Controller
 
     public function opportunities()
     {
-        $contacts = Contact::where('contact_type_id', '=', self::TYPE_OPP)->orderBy('created_at', 'desc')->paginate(20);
+        $contacts = Contact::IndexOpportunities()->paginate(20);
         return view('contacts.index')
             ->with('contacts', $contacts)
             ->with('counts',   $this->contact_counts())
@@ -209,7 +209,7 @@ class ContactController extends Controller
 
     public function customers()
     {
-        $contacts = Contact::where('contact_type_id', '=', self::TYPE_CUSTOMER)->orderBy('created_at', 'desc')->paginate(20);
+        $contacts = Contact::IndexCustomers()->paginate(20);
         return view('contacts.index')
             ->with('contacts', $contacts)
             ->with('counts',   $this->contact_counts())

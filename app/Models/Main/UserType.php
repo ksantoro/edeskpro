@@ -6,7 +6,20 @@ use App\Models\MainModel;
 
 class UserType extends MainModel
 {
-    protected $table = 'type_user';
+    const
+        TYPE_USER_GOD        = 1,
+        TYPE_USER_ADMIN      = 2,
+        TYPE_USER_TECH       = 3,
+        TYPE_USER_CSR        = 4,
+        TYPE_USER_SALES      = 5,
+        TYPE_USER_SALES_MGR  = 6,
+        TYPE_USER_FIELD_TECH = 7,
+        TYPE_USER_FOREMAN    = 8,
+        TYPE_USER_MARKETING  = 9,
+        TYPE_USER_FINANCE    = 10;
+
+    protected
+        $table = 'type_user';
 
     public function user()
     {

@@ -4,6 +4,7 @@ namespace App\Mail\Contacts;
 
 use App\Models\Main\Company;
 use App\Models\Tenant\Contact;
+use App\Models\Tenant\Notes;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -19,6 +20,7 @@ class ContactAssigned extends Mailable
         $company,
         $contact,
         $delivery,
+        $notes,
         $title = 'Contact Assigned';
 
     /**
@@ -32,6 +34,7 @@ class ContactAssigned extends Mailable
         $this->contact  = $contact;
         $this->billing  = $contact->locations()->where('is_billing', 1)->first();
         $this->delivery = $contact->locations()->where('is_billing', 0)->first();
+        $this->notes    = Notes::contact($contact)->orderBy('created_at', 'desc')->get();
     }
 
     /**

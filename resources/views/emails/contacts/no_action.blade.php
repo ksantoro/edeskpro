@@ -67,4 +67,33 @@
 
     <br>
 
+    <div style='width:100%;background:#ecf0f2;line-height:1.5em;'>
+        <div style='width:100%;background:#36454f;color:#fff;padding:10px 0px 10px 0px;text-align:center;'>Notes</div>
+        <td style='padding:10px;'>
+            @isset($notes)
+                @empty($notes)
+                    There are no notes for this contact yet.
+                @else
+                    <table cellpadding='5' cellspacing='0' border='0'>
+                        @foreach ($notes as $item)
+                            <tr>
+                                <td>
+                                    <small><b>{{ $item['ts']->format('m/d/Y g:i A') }}</b></small>
+                                </td>
+                                <td>
+                                    <small style='text-transform:uppercase;'>{{ $item['user'] }}</small>
+                                </td>
+                                <td>
+                                    <small>{{ $item['note'] }}</small>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+        @endempty
+        @endisset
+    </div>
+    </div>
+
+    <br>
+
 @endsection

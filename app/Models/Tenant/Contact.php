@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Models\Main\ContactType;
 use App\Models\Main\LeadSource;
 use App\Models\Main\User;
+use App\Models\Main\UserType;
 use App\Models\Tenant\Activity\ActivityLog;
 use App\Models\Tenant\Activity\ContactActivityLog;
 use App\Models\TenantModel;
@@ -65,9 +66,61 @@ class Contact extends TenantModel
         return $this->belongsToMany(LeadSource::class, "{$database}.contact_lead_sources", 'contact_id', 'lead_source_id');
     }
 
+    public function scopeIndexList($query)
+    {
+        $contacts = $query->where('deleted_at', '=', null);
+
+        if (Auth::user()->type_user_id == UserType::TYPE_USER_SALES) {
+            $contacts = $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')->where('contact_owners.user_id', '=', Auth::user()->id);
+        }
+
+        return $contacts->orderBy('created_at', 'desc');
+    }
+
+    public function scopeIndexLeads($query)
+    {
+        $contacts = $query->where('deleted_at', '=', null);
+
+        if (Auth::user()->type_user_id == UserType::TYPE_USER_SALES) {
+            $contacts = $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                ->where('contact_owners.user_id', '=', Auth::user()->id)
+                ->where('contact_type_id', self::TYPE_LEAD);
+        }
+
+        return $contacts->orderBy('created_at', 'desc');
+    }
+
+    public function scopeIndexOpportunities($query)
+    {
+        $contacts = $query->where('deleted_at', '=', null);
+
+        if (Auth::user()->type_user_id == UserType::TYPE_USER_SALES) {
+            $contacts = $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                ->where('contact_owners.user_id', '=', Auth::user()->id)
+                ->where('contact_type_id', self::TYPE_OPP);
+        }
+
+        return $contacts->orderBy('created_at', 'desc');
+    }
+
+    public function scopeIndexCustomers($query)
+    {
+        $contacts = $query->where('deleted_at', '=', null);
+
+        if (Auth::user()->type_user_id == UserType::TYPE_USER_SALES) {
+            $contacts = $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                ->where('contact_owners.user_id', '=', Auth::user()->id)
+                ->where('contact_type_id', self::TYPE_CUSTOMER);
+        }
+
+        return $contacts->orderBy('created_at', 'desc');
+    }
+
     public function scopeMyContacts($query)
     {
-        return $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')->where('contact_owners.user_id', '=', Auth::user()->id)->orderBy('created_at', 'desc');
+        return $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+            ->where('contact_owners.user_id', '=', Auth::user()->id)
+            ->orderBy('created_at', 'desc');
     }
 
     public function scopeLeads($query)
