@@ -116,6 +116,17 @@ class Contact extends TenantModel
         return $contacts->orderBy('created_at', 'desc');
     }
 
+    public function scopeIndexArchiveList($query)
+    {
+        $contacts = $query->where('deleted_at', '!=', null);
+
+        if (Auth::user()->type_user_id == UserType::TYPE_USER_SALES) {
+            $contacts = $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')->where('contact_owners.user_id', '=', Auth::user()->id);
+        }
+
+        return $contacts->orderBy('created_at', 'desc');
+    }
+
     public function scopeMyContacts($query)
     {
         return $query->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')

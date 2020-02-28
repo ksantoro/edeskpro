@@ -60,7 +60,7 @@ class ContactController extends Controller
     public function search(ContactSearchRequest $request)
     {
         $valid    = $request->validated();
-        $contacts = Contact::where('first_name', 'LIKE', "%{$valid['search_term']}%")
+        $contacts = Contact::IndexList()->where('first_name', 'LIKE', "%{$valid['search_term']}%")
             ->orWhere('last_name', 'LIKE', "%{$valid['search_term']}%")
             ->orWhere('phone', 'LIKE', "%{$valid['search_term']}%")
             ->orWhere('email', 'LIKE', "%{$valid['search_term']}%")
@@ -73,7 +73,7 @@ class ContactController extends Controller
 
     private function contact_counts()
     {
-        $contacts            = Contact::all();
+        $contacts            = Contact::IndexList()->get();
         $counts              = [];
         $counts['all']       = count($contacts);
         $counts['leads']     = count($contacts->where('contact_type_id', '=', self::TYPE_LEAD));
@@ -140,7 +140,8 @@ class ContactController extends Controller
                     0 => ['name' => "{$source->name} - {$source->description}"],
                     1 => ['name' => "{$person->first_name} {$person->last_name}"]
                 ];
-                $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                $contacts = Contact::IndexList()
+                    ->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
                     ->join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
                     ->where('contact_owners.user_id', '=', $filters['salesperson'])
                     ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
@@ -154,7 +155,8 @@ class ContactController extends Controller
                     $applied_filters = [
                         0 => ['name' => "{$person->first_name} {$person->last_name}"]
                     ];
-                    $contacts = Contact::join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
+                    $contacts = Contact::IndexList()
+                        ->join('contact_owners', 'contacts.id', '=', 'contact_owners.contact_id')
                         ->where('contact_owners.user_id', '=', $filters['salesperson'])
                         ->where('contacts.deleted_at', '=', null)
                         ->orderBy('contacts.created_at', 'desc');
@@ -165,7 +167,8 @@ class ContactController extends Controller
                     $applied_filters = [
                         0 => ['name' => "{$source->name} - {$source->description}"]
                     ];
-                    $contacts = Contact::join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
+                    $contacts = Contact::IndexList()
+                        ->join('contact_lead_sources', 'contact_lead_sources.contact_id', '=', 'contacts.id')
                         ->where('contact_lead_sources.lead_source_id', '=', $filters['contact_source'])
                         ->where('contacts.deleted_at', '=', null)
                         ->orderBy('contacts.created_at', 'desc');
@@ -218,7 +221,7 @@ class ContactController extends Controller
 
     public function archived_contacts()
     {
-        $contacts = Contact::where('deleted_at', '!=', null)->orderBy('created_at', 'desc')->paginate(20);
+        $contacts = Contact::IndexArchiveList()->paginate(20);
         return view('contacts.index')
             ->with('contacts', $contacts)
             ->with('counts',   $this->contact_counts())
@@ -643,7 +646,7 @@ class ContactController extends Controller
             }
 
             return view('contacts.index')
-                ->with('contacts',      Contact::all()->sortByDesc('created_at'))
+                ->with('contacts',      Contact::IndexList()->get())
                 ->with('counts',        $this->contact_counts())
                 ->with('filters',       $this->make_filters())
                 ->with('alert_message', $message);
